@@ -1,13 +1,12 @@
-# Use lightweight nginx
 FROM nginx:alpine
 
-# Remove default config
+# Clear default html
 RUN rm -rf /usr/share/nginx/html/*
-
-# Copy your static files
 COPY . /usr/share/nginx/html
 
-# Expose port
-EXPOSE 80
+# Use env variable for port
+ENV PORT 8080
+RUN sed -i "s/listen 80;/listen $PORT;/" /etc/nginx/conf.d/default.conf
 
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
