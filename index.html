@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReputeHQ - Transform Customer Reviews Into Business Growth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FFFFFF;
+      color: #1A1F36;
+      overflow-x: hidden;
+    }
+
+    /* GoCardless-inspired color palette */
+    :root {
+      --primary: #1A1F36;
+      --accent: #00D4AA;
+      --accent-dark: #00B894;
+      --text-primary: #1A1F36;
+      --text-secondary: #6B7280;
+      --text-muted: #9CA3AF;
+      --bg-white: #FFFFFF;
+      --bg-light: #F7F8FA;
+      --bg-dark: #1A1F36;
+      --border-light: #E5E7EB;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .fade-in-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .fade-in-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .fade-in-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .fade-in-up-delay-4 { animation-delay: 0.4s; opacity: 0; }
+    .fade-in-up-delay-5 { animation-delay: 0.5s; opacity: 0; }
+    .fade-in-up-delay-6 { animation-delay: 0.6s; opacity: 0; }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 80px;
+      background: var(--bg-white);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .nav-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--primary);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-light);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--border-light);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+    }
+
+    .btn-dark {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-dark:hover {
+      background: #2D3555;
+      transform: translateY(-2px);
+    }
+
+    .btn-large {
+      padding: 16px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 140px 80px 100px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F7F8FA 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-shape {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.08) 0%, rgba(0, 212, 170, 0.02) 100%);
+      right: -200px;
+      top: -200px;
+      pointer-events: none;
+    }
+
+    .hero-bg-shape-2 {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(26, 31, 54, 0.05) 0%, rgba(26, 31, 54, 0.01) 100%);
+      left: -150px;
+      bottom: -150px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      gap: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-text {
+      flex: 1;
+      max-width: 600px;
+    }
+
+    .hero-visual {
+      flex: 1;
+      max-width: 580px;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 212, 170, 0.1);
+      padding: 8px 16px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .badge-text {
+      color: var(--accent-dark);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .hero-title {
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .hero-title .highlight {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-size: 20px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .trust-badges {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .trust-badge svg {
+      color: var(--accent);
+    }
+
+    /* Dashboard Preview */
+    .dashboard-preview {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.12), 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .dashboard-header {
+      background: var(--bg-dark);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dashboard-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dashboard-dot-red { background: #FF5F57; }
+    .dashboard-dot-yellow { background: #FFBD2E; }
+    .dashboard-dot-green { background: #28CA41; }
+
+    .dashboard-body {
+      padding: 24px;
+      background: var(--bg-light);
+    }
+
+    .dashboard-stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .dashboard-stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .dashboard-stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .dashboard-stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .dashboard-review-card {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .review-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .review-content {
+      flex: 1;
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .review-name {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    .review-stars {
+      color: #FBBF24;
+      font-size: 14px;
+    }
+
+    .review-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Stats Section */
+    .stats {
+      background: var(--bg-dark);
+      padding: 80px;
+    }
+
+    .stats-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      color: var(--accent);
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -2px;
+    }
+
+    .stat-label {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 16px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 120px 80px;
+      background: var(--bg-white);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-label {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 44px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--bg-light);
+      border-radius: 16px;
+      padding: 36px;
+      transition: all 0.3s;
+      border: 1px solid transparent;
+    }
+
+    .feature-card:hover {
+      background: var(--bg-white);
+      border-color: var(--border-light);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .feature-icon svg {
+      color: var(--primary);
+    }
+
+    .feature-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .feature-desc {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* Testimonials Section */
+    .testimonials {
+      padding: 120px 80px;
+      background: var(--bg-light);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .testimonial-card {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .testimonial-quote {
+      color: var(--accent);
+      font-size: 48px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-text {
+      color: var(--text-primary);
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .author-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .author-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .author-role {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 120px 80px;
+      background: var(--bg-dark);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-bg-shape {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 212, 170, 0.15) 0%, transparent 70%);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cta-title {
+      font-size: 44px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .cta-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 18px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      background: #0D1017;
+      padding: 80px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-brand {
+      max-width: 300px;
+    }
+
+    .footer-brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .footer-brand-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .footer-brand-desc {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 80px;
+      flex-wrap: wrap;
+    }
+
+    .footer-column h4 {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-column a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .footer-copyright {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 14px;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-legal a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover {
+      color: white;
+    }
+
+    /* Icons */
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .icon-small {
+      width: 18px;
+      height: 18px;
+    }
+
+    .icon-large {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .hero-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-text {
+        max-width: 700px;
+      }
+
+      .hero-cta {
+        justify-content: center;
+      }
+
+      .trust-badges {
+        justify-content: center;
+      }
+
+      .hero-visual {
+        max-width: 500px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .nav, .hero, .features, .testimonials, .cta, .stats, .footer {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .hero-title {
+        font-size: 44px;
+      }
+
+      .section-title {
+        font-size: 36px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        gap: 20px;
+        padding: 16px 24px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .hero {
+        padding: 120px 24px 80px;
+      }
+
+      .hero-title {
+        font-size: 36px;
+        letter-spacing: -1px;
+      }
+
+      .hero-subtitle {
+        font-size: 17px;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .btn-large {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .trust-badges {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .dashboard-preview {
+        display: none;
+      }
+
+      .stats-grid {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .stat-value {
+        font-size: 44px;
+      }
+
+      .features, .testimonials, .cta, .footer {
+        padding: 80px 24px;
+      }
+
+      .features-grid, .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-title {
+        font-size: 32px;
+      }
+
+      .footer-content {
+        flex-direction: column;
+      }
+
+      .footer-links {
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav fade-in-up fade-in-up-delay-1">
+    <div class="nav-brand">
+      <img src="real-logo.png" alt="ReputeHQ" class="nav-logo">
+      <span class="nav-title">ReputeHQ</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#testimonials" class="nav-link">Testimonials</a>
+      <a href="#" class="nav-link">Pricing</a>
+      <a href="#" class="nav-link">About</a>
+      <a href="login.html" class="btn btn-ghost">Sign In</a>
+      <a href="signup.html" class="btn btn-primary">Get Started Free</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg-shape"></div>
+    <div class="hero-bg-shape-2"></div>
+
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="badge fade-in-up fade-in-up-delay-2">
+          <span class="badge-dot"></span>
+          <span class="badge-text">AI-Powered Review Management</span>
+        </div>
+
+        <h1 class="hero-title fade-in-up fade-in-up-delay-3">
+          Transform Customer Reviews Into <span class="highlight">Business Growth</span>
+        </h1>
+
+        <p class="hero-subtitle fade-in-up fade-in-up-delay-4">
+          Centralize reviews from Google and Trustpilot. Generate intelligent responses with AI. Build lasting customer relationships at scale.
+        </p>
+
+        <div class="hero-cta fade-in-up fade-in-up-delay-5">
+          <a href="signup.html" class="btn btn-primary btn-large">
+            Start Free Trial
+            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19"/>
+            </svg>
+          </a>
+          <a href="admin-login.html" class="btn btn-outline btn-large">
+            Admin Portal
+          </a>
+        </div>
+
+        <div class="trust-badges fade-in-up fade-in-up-delay-6">
+          <div class="trust-badge">
+            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            No credit card required
+          </div>
+          <div class="trust-badge">
+            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            14-day free trial
+          </div>
+          <div class="trust-badge">
+            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Cancel anytime
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual fade-in-up fade-in-up-delay-5">
+        <div class="dashboard-preview">
+          <div class="dashboard-header">
+            <span class="dashboard-dot dashboard-dot-red"></span>
+            <span class="dashboard-dot dashboard-dot-yellow"></span>
+            <span class="dashboard-dot dashboard-dot-green"></span>
+          </div>
+          <div class="dashboard-body">
+            <div class="dashboard-stat-row">
+              <div class="dashboard-stat-card">
+                <div class="dashboard-stat-value">4.8</div>
+                <div class="dashboard-stat-label">Avg Rating</div>
+              </div>
+              <div class="dashboard-stat-card">
+                <div class="dashboard-stat-value">247</div>
+                <div class="dashboard-stat-label">Reviews</div>
+              </div>
+              <div class="dashboard-stat-card">
+                <div class="dashboard-stat-value">94%</div>
+                <div class="dashboard-stat-label">Response Rate</div>
+              </div>
+            </div>
+            <div class="dashboard-review-card">
+              <div class="review-avatar">S</div>
+              <div class="review-content">
+                <div class="review-header">
+                  <span class="review-name">Sarah Johnson</span>
+                  <span class="review-stars">★★★★★</span>
+                </div>
+                <div class="review-text">Excellent service! The team went above and beyond to help us. Highly recommended!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-value">10K+</div>
+        <div class="stat-label">Active Businesses</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">2M+</div>
+        <div class="stat-label">Reviews Managed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">4.9</div>
+        <div class="stat-label">Average Rating</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">85%</div>
+        <div class="stat-label">Response Rate Increase</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-header">
+      <div class="section-label">Platform Features</div>
+      <h2 class="section-title">Everything You Need to Excel</h2>
+      <p class="section-subtitle">A comprehensive suite of tools designed for modern businesses that take customer experience seriously.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Unified Dashboard</h3>
+        <p class="feature-desc">Aggregate reviews from Google Business, Trustpilot, and more into a single, intuitive command center.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3L14.5 8.5L21 9.5L16.5 14L17.5 21L12 18L6.5 21L7.5 14L3 9.5L9.5 8.5L12 3Z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">AI Response Generation</h3>
+        <p class="feature-desc">Craft personalized, context-aware responses instantly with our GPT-4 powered AI assistant.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 20V10M12 20V4M6 20V14"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Advanced Analytics</h3>
+        <p class="feature-desc">Track sentiment trends, response rates, and reputation scores with real-time insights.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 21H21M5 21V7L13 3V21M19 21V11L13 7"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Multi-Location Support</h3>
+        <p class="feature-desc">Manage unlimited business locations from one account with role-based team access.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Instant Notifications</h3>
+        <p class="feature-desc">Never miss a review. Get real-time alerts and respond while the conversation is fresh.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/>
+            <path d="M9 12L11 14L15 10"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Enterprise Security</h3>
+        <p class="feature-desc">Bank-level encryption, SOC 2 compliance, and role-based permissions protect your data.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials" id="testimonials">
+    <div class="section-header">
+      <div class="section-label">Trusted Worldwide</div>
+      <h2 class="section-title">Loved by Industry Leaders</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">ReputeHQ transformed how we handle customer feedback. Our response time dropped from days to minutes, and our ratings have never been higher.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S</div>
+          <div>
+            <div class="author-name">Sarah Mitchell</div>
+            <div class="author-role">Operations Director, Metro Hospitality Group</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">The AI-generated responses are remarkably on-brand. It's like having a dedicated reputation manager working 24/7.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">J</div>
+          <div>
+            <div class="author-name">James Rodriguez</div>
+            <div class="author-role">CEO, AutoCare Express</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Managing 50+ locations was a nightmare before ReputeHQ. Now our franchise owners have full visibility while we maintain brand consistency.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">E</div>
+          <div>
+            <div class="author-name">Emily Chen</div>
+            <div class="author-role">VP of Marketing, FreshBite Restaurants</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="cta-bg-shape"></div>
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to Elevate Your Reputation?</h2>
+      <p class="cta-subtitle">Join thousands of businesses using ReputeHQ to turn customer feedback into competitive advantage.</p>
+      <a href="signup.html" class="btn btn-primary btn-large">
+        Start Your Free Trial
+        <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12H19M19 12L12 5M19 12L12 19"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-brand-header">
+          <img src="real-logo.png" alt="ReputeHQ" class="footer-logo">
+          <span class="footer-brand-name">ReputeHQ</span>
+        </div>
+        <p class="footer-brand-desc">Empowering businesses to build stronger customer relationships through intelligent review management.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Product</h4>
+          <a href="#">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">Integrations</a>
+          <a href="#">API</a>
+        </div>
+        <div class="footer-column">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <a href="help-center.html">Help Center</a>
+          <a href="contact.html">Contact</a>
+          <a href="status.html">Status</a>
+          <a href="security.html">Security</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 ReputeHQ. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="service.html">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

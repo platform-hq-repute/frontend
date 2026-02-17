@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - ReputeHQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F8FAFC;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 260px;
+      background: #1A1F36;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 8px;
+      margin-bottom: 32px;
+    }
+
+    .sidebar-logo {
+      width: 40px;
+      height: 40px;
+    }
+
+    .sidebar-brand {
+      color: #FFFFFF;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section-title {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 12px;
+      margin-bottom: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+    }
+
+    .nav-item.active {
+      background: rgba(0, 212, 170, 0.15);
+      color: #00D4AA;
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .nav-item .badge {
+      margin-left: auto;
+      background: #F59E0B;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00D4AA, #0D9488);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .user-details {
+      flex: 1;
+    }
+
+    .user-name {
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .user-email {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 12px;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      background: #FFFFFF;
+      padding: 20px 32px;
+      border-bottom: 1px solid #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .page-title {
+      color: #1A1F36;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .top-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn-primary {
+      background: #00D4AA;
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background: #00B894;
+    }
+
+    .btn-primary:disabled {
+      background: #9CA3AF;
+      cursor: not-allowed;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #6B7280;
+      border: 1px solid #E5E7EB;
+    }
+
+    .btn-outline:hover {
+      background: #F3F4F6;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    .content-area {
+      padding: 32px;
+    }
+
+    /* Page Views */
+    .page-view {
+      display: none;
+    }
+
+    .page-view.active {
+      display: block;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid #E5E7EB;
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-icon.green { background: rgba(0, 212, 170, 0.1); color: #00D4AA; }
+    .stat-icon.blue { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+    .stat-icon.purple { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
+    .stat-icon.orange { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+
+    .stat-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 100px;
+    }
+
+    .stat-change.positive { background: rgba(0, 212, 170, 0.1); color: #00D4AA; }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1A1F36;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      color: #6B7280;
+      font-size: 14px;
+    }
+
+    /* Cards */
+    .card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1px solid #E5E7EB;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1A1F36;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    /* Filter Chips */
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid #E5E7EB;
+      background: #FFFFFF;
+      color: #6B7280;
+    }
+
+    .filter-chip:hover {
+      border-color: #00D4AA;
+    }
+
+    .filter-chip.active {
+      background: #1A1F36;
+      color: #FFFFFF;
+      border-color: #1A1F36;
+    }
+
+    .filter-chip .count {
+      margin-left: 6px;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 11px;
+    }
+
+    .filter-chip.active .count {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Reviews List */
+    .reviews-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .review-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid #E5E7EB;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .review-card:hover {
+      border-color: #00D4AA;
+      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.1);
+    }
+
+    .review-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .review-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1A1F36, #2D3555);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-weight: 600;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .review-info {
+      flex: 1;
+    }
+
+    .review-author {
+      font-weight: 600;
+      color: #1A1F36;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .review-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .review-rating {
+      display: flex;
+      gap: 2px;
+    }
+
+    .star {
+      color: #E5E7EB;
+    }
+
+    .star.filled {
+      color: #FBBF24;
+    }
+
+    .review-date {
+      color: #9CA3AF;
+      font-size: 13px;
+    }
+
+    .review-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .review-status.pending { background: #FEF3C7; color: #D97706; }
+    .review-status.ai_generated { background: #EDE9FE; color: #7C3AED; }
+    .review-status.responded { background: #D1FAE5; color: #059669; }
+
+    .review-content {
+      color: #4B5563;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .review-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .review-tag {
+      background: #F3F4F6;
+      color: #6B7280;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .review-actions {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #F3F4F6;
+      display: flex;
+      gap: 12px;
+    }
+
+    /* Locations Grid */
+    .locations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .location-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid #E5E7EB;
+      transition: all 0.2s;
+    }
+
+    .location-card:hover {
+      border-color: #00D4AA;
+    }
+
+    .location-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .location-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #1A1F36;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      flex-shrink: 0;
+    }
+
+    .location-name {
+      font-weight: 600;
+      color: #1A1F36;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .location-address {
+      color: #9CA3AF;
+      font-size: 13px;
+    }
+
+    .location-stats {
+      display: flex;
+      gap: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #F3F4F6;
+    }
+
+    .location-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .location-stat-value {
+      font-weight: 600;
+      color: #1A1F36;
+    }
+
+    .location-stat-label {
+      color: #9CA3AF;
+      font-size: 13px;
+    }
+
+    .add-location-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 24px;
+      border: 2px dashed #E5E7EB;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+
+    .add-location-card:hover {
+      border-color: #00D4AA;
+      background: rgba(0, 212, 170, 0.02);
+    }
+
+    .add-location-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: rgba(0, 212, 170, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #00D4AA;
+      margin-bottom: 16px;
+    }
+
+    .add-location-title {
+      font-weight: 600;
+      color: #1A1F36;
+      margin-bottom: 4px;
+    }
+
+    .add-location-desc {
+      color: #9CA3AF;
+      font-size: 13px;
+    }
+
+    /* Settings */
+    .settings-section {
+      margin-bottom: 32px;
+    }
+
+    .settings-section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1A1F36;
+      margin-bottom: 16px;
+    }
+
+    .settings-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1px solid #E5E7EB;
+      overflow: hidden;
+    }
+
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid #F3F4F6;
+    }
+
+    .settings-item:last-child {
+      border-bottom: none;
+    }
+
+    .settings-item-label {
+      font-weight: 500;
+      color: #1A1F36;
+      margin-bottom: 4px;
+    }
+
+    .settings-item-desc {
+      color: #9CA3AF;
+      font-size: 13px;
+    }
+
+    .tone-selector {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tone-option {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid #E5E7EB;
+      background: #FFFFFF;
+      color: #6B7280;
+      transition: all 0.2s;
+    }
+
+    .tone-option:hover {
+      border-color: #00D4AA;
+    }
+
+    .tone-option.active {
+      background: #00D4AA;
+      color: #FFFFFF;
+      border-color: #00D4AA;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #FFFFFF;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1A1F36;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #F3F4F6;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6B7280;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: #E5E7EB;
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-footer {
+      padding: 24px;
+      border-top: 1px solid #E5E7EB;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    /* Review Detail Modal */
+    .review-detail-author {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .review-detail-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #1A1F36, #2D3555);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-weight: 600;
+      font-size: 24px;
+    }
+
+    .review-detail-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1A1F36;
+      margin-bottom: 8px;
+    }
+
+    .review-detail-content {
+      background: #F8FAFC;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .review-detail-content p {
+      color: #374151;
+      line-height: 1.7;
+    }
+
+    .response-section {
+      margin-top: 24px;
+    }
+
+    .response-label {
+      font-weight: 600;
+      color: #1A1F36;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .response-textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 16px;
+      border: 1px solid #E5E7EB;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: vertical;
+      transition: all 0.2s;
+    }
+
+    .response-textarea:focus {
+      outline: none;
+      border-color: #00D4AA;
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+    }
+
+    .response-textarea:disabled {
+      background: #F8FAFC;
+      cursor: not-allowed;
+    }
+
+    .response-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #8B5CF6, #6366F1);
+      color: #FFFFFF;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 64px 24px;
+    }
+
+    .empty-state-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: #F3F4F6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      color: #9CA3AF;
+    }
+
+    .empty-state-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1A1F36;
+      margin-bottom: 8px;
+    }
+
+    .empty-state-desc {
+      color: #6B7280;
+      font-size: 14px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1A1F36;
+      color: #FFFFFF;
+      padding: 16px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 3000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background: #059669;
+    }
+
+    .toast.error {
+      background: #DC2626;
+    }
+
+    /* Mobile Menu Button */
+    .mobile-menu-btn {
+      display: none;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 1001;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #1A1F36;
+      border: none;
+      color: #FFFFFF;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .mobile-overlay.active {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu-btn {
+        display: flex;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .top-bar {
+        padding: 16px;
+        padding-left: 70px;
+      }
+
+      .page-title {
+        font-size: 20px;
+      }
+
+      .top-bar-actions .btn {
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+
+      .top-bar-actions .btn svg {
+        display: none;
+      }
+
+      .content-area {
+        padding: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+      }
+
+      .stat-change {
+        display: none;
+      }
+
+      .locations-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-chips {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 8px;
+      }
+
+      .filter-chip {
+        flex-shrink: 0;
+      }
+
+      .review-card {
+        padding: 16px;
+      }
+
+      .review-header {
+        gap: 12px;
+      }
+
+      .review-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+
+      .modal {
+        margin: 16px;
+        max-height: calc(100vh - 32px);
+      }
+
+      .modal-header, .modal-body, .modal-footer {
+        padding: 16px;
+      }
+
+      .toast {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+      }
+
+      .card-header {
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Menu Button -->
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <img src="real-logo.png" alt="ReputeHQ" class="sidebar-logo">
+      <span class="sidebar-brand">ReputeHQ</span>
+    </div>
+
+    <nav>
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="#" class="nav-item active" data-page="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="9" rx="1"/>
+            <rect x="14" y="3" width="7" height="5" rx="1"/>
+            <rect x="14" y="12" width="7" height="9" rx="1"/>
+            <rect x="3" y="16" width="7" height="5" rx="1"/>
+          </svg>
+          Dashboard
+        </a>
+        <a href="#" class="nav-item" data-page="reviews">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          Reviews
+          <span class="badge" id="pendingBadge">0</span>
+        </a>
+        <a href="#" class="nav-item" data-page="locations">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          Locations
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Settings</div>
+        <a href="#" class="nav-item" data-page="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          AI Settings
+        </a>
+        <a href="security-settings.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Security
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-details">
+          <div class="user-name" id="userName">User</div>
+          <div class="user-email" id="userEmail">user@example.com</div>
+        </div>
+      </div>
+      <a href="#" class="nav-item" onclick="logout(); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="page-view active">
+      <div class="top-bar">
+        <h1 class="page-title">Dashboard</h1>
+        <div class="top-bar-actions">
+          <button class="btn btn-primary" onclick="navigateTo('locations')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add Location
+          </button>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon green">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <span class="stat-change positive">+12%</span>
+            </div>
+            <div class="stat-value" id="statTotalReviews">0</div>
+            <div class="stat-label">Total Reviews</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon blue">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="statAvgRating">0.0</div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon orange">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="statPending">0</div>
+            <div class="stat-label">Pending Responses</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon purple">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="statLocations">0</div>
+            <div class="stat-label">Locations</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Recent Reviews</h2>
+            <button class="btn btn-outline btn-sm" onclick="navigateTo('reviews')">View All</button>
+          </div>
+          <div class="card-body">
+            <div class="reviews-list" id="recentReviewsList">
+              <div class="empty-state">
+                <div class="empty-state-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                </div>
+                <div class="empty-state-title">No reviews yet</div>
+                <div class="empty-state-desc">Connect a location to start receiving reviews</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Page -->
+    <div id="reviewsPage" class="page-view">
+      <div class="top-bar">
+        <h1 class="page-title">Reviews</h1>
+      </div>
+
+      <div class="content-area">
+        <div class="filter-chips">
+          <div class="filter-chip active" data-filter="all">All <span class="count" id="filterAllCount">0</span></div>
+          <div class="filter-chip" data-filter="pending">Pending <span class="count" id="filterPendingCount">0</span></div>
+          <div class="filter-chip" data-filter="ai_generated">AI Ready <span class="count" id="filterAiCount">0</span></div>
+          <div class="filter-chip" data-filter="responded">Responded <span class="count" id="filterRespondedCount">0</span></div>
+        </div>
+
+        <div class="reviews-list" id="allReviewsList">
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </div>
+            <div class="empty-state-title">No reviews found</div>
+            <div class="empty-state-desc">Try adjusting your filters or add a new location</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Locations Page -->
+    <div id="locationsPage" class="page-view">
+      <div class="top-bar">
+        <h1 class="page-title">Locations</h1>
+      </div>
+
+      <div class="content-area">
+        <div class="locations-grid" id="locationsGrid">
+          <div class="add-location-card" onclick="showAddLocationModal()">
+            <div class="add-location-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </div>
+            <div class="add-location-title">Add Location</div>
+            <div class="add-location-desc">Connect Google Business Profile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div id="settingsPage" class="page-view">
+      <div class="top-bar">
+        <h1 class="page-title">AI Settings</h1>
+      </div>
+
+      <div class="content-area">
+        <div class="settings-section">
+          <h3 class="settings-section-title">Response Tone</h3>
+          <div class="settings-card">
+            <div class="settings-item">
+              <div>
+                <div class="settings-item-label">AI Response Tone</div>
+                <div class="settings-item-desc">Choose how AI should respond to reviews</div>
+              </div>
+              <div class="tone-selector">
+                <div class="tone-option" data-tone="professional">Professional</div>
+                <div class="tone-option active" data-tone="friendly">Friendly</div>
+                <div class="tone-option" data-tone="casual">Casual</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">Account</h3>
+          <div class="settings-card">
+            <div class="settings-item">
+              <div>
+                <div class="settings-item-label" id="settingsUserName">User Name</div>
+                <div class="settings-item-desc" id="settingsUserEmail">user@example.com</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Review Detail Modal -->
+  <div class="modal-overlay" id="reviewModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Review Details</h2>
+        <button class="modal-close" onclick="closeReviewModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="review-detail-author">
+          <div class="review-detail-avatar" id="modalAvatar">J</div>
+          <div>
+            <div class="review-detail-name" id="modalAuthor">John Doe</div>
+            <div class="review-meta">
+              <div class="review-rating" id="modalRating"></div>
+              <span class="review-date" id="modalDate">Jan 1, 2024</span>
+              <span class="review-status pending" id="modalStatus">Pending</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-detail-content">
+          <p id="modalContent">Review content here...</p>
+        </div>
+
+        <div class="review-tags" id="modalTags"></div>
+
+        <div class="response-section">
+          <div class="response-label">
+            Your Response
+            <span class="ai-badge" id="aiBadge" style="display: none;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+              </svg>
+              AI Generated
+            </span>
+          </div>
+          <textarea class="response-textarea" id="responseTextarea" placeholder="Write your response or generate one with AI..."></textarea>
+          <div class="response-actions" id="responseActions">
+            <button class="btn btn-outline" id="generateBtn" onclick="generateAIResponse()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+              </svg>
+              Generate with AI
+            </button>
+            <button class="btn btn-primary" id="publishBtn" onclick="publishResponse()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              Publish Response
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Location Modal -->
+  <div class="modal-overlay" id="addLocationModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Add Location</h2>
+        <button class="modal-close" onclick="closeAddLocationModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-weight: 500; color: #1A1F36; margin-bottom: 8px;">Business Name</label>
+          <input type="text" id="locationName" placeholder="Enter business name" style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 14px; font-family: inherit;">
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-weight: 500; color: #1A1F36; margin-bottom: 8px;">Address</label>
+          <input type="text" id="locationAddress" placeholder="Enter business address" style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 14px; font-family: inherit;">
+        </div>
+        <div style="background: #F8FAFC; padding: 16px; border-radius: 10px; margin-top: 24px;">
+          <p style="color: #6B7280; font-size: 13px; line-height: 1.5;">
+            <strong>Note:</strong> In production, this would connect to your Google Business Profile via OAuth. For now, locations are added manually.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeAddLocationModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="addLocation()">Add Location</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span id="toastMessage">Success!</span>
+  </div>
+
+  <script src="config.js">
+    // Configuration
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // State
+    let currentUser = null;
+    let locations = [];
+    let reviews = [];
+    let currentFilter = 'all';
+    let currentReview = null;
+    let aiSettings = {
+      tone: 'friendly',
+      maxLength: 300
+    };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+      const storedUser = localStorage.getItem('reputehq_user');
+      if (!storedUser) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      currentUser = JSON.parse(storedUser);
+      updateUserUI();
+
+      const savedSettings = localStorage.getItem('reputehq_ai_settings');
+      if (savedSettings) {
+        aiSettings = JSON.parse(savedSettings);
+        updateToneUI();
+      }
+
+      await loadData();
+      setupNavigation();
+      setupFilters();
+      setupToneSelector();
+    });
+
+    function updateUserUI() {
+      const initials = (currentUser.name || currentUser.email || 'U').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+      document.getElementById('userAvatar').textContent = initials;
+      document.getElementById('userName').textContent = currentUser.name || currentUser.business_name || 'User';
+      document.getElementById('userEmail').textContent = currentUser.email || '';
+      document.getElementById('settingsUserName').textContent = currentUser.name || 'User';
+      document.getElementById('settingsUserEmail').textContent = currentUser.email || '';
+    }
+
+    async function loadData() {
+      await Promise.all([loadLocations(), loadReviews()]);
+      updateStats();
+      renderRecentReviews();
+      renderAllReviews();
+      renderLocations();
+    }
+
+    async function loadLocations() {
+      if (!currentUser?.id) return;
+
+      const { data, error } = await supabaseClient
+        .from('locations')
+        .select('*')
+        .eq('owner_id', currentUser.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading locations:', error);
+        return;
+      }
+
+      locations = (data || []).map(row => ({
+        id: row.id,
+        name: row.name,
+        address: row.address,
+        googlePlaceId: row.google_place_id,
+        averageRating: row.average_rating || 0,
+        totalReviews: row.total_reviews || 0,
+        pendingResponses: row.pending_responses || 0,
+        ownerId: row.owner_id,
+        status: row.status
+      }));
+    }
+
+    async function loadReviews() {
+      if (locations.length === 0) {
+        reviews = [];
+        return;
+      }
+
+      const locationIds = locations.map(l => l.id);
+      const { data, error } = await supabaseClient
+        .from('reviews')
+        .select('*')
+        .in('location_id', locationIds)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading reviews:', error);
+        return;
+      }
+
+      reviews = (data || []).map(row => ({
+        id: row.id,
+        locationId: row.location_id,
+        locationName: row.location_name,
+        platform: row.platform,
+        authorName: row.author_name,
+        authorAvatar: row.author_avatar,
+        rating: row.rating,
+        content: row.content,
+        createdAt: row.created_at,
+        status: row.status,
+        aiResponse: row.ai_response,
+        publishedResponse: row.published_response,
+        respondedAt: row.responded_at
+      }));
+    }
+
+    function updateStats() {
+      const totalReviews = reviews.length;
+      const avgRating = reviews.length > 0
+        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+        : '0.0';
+      const pending = reviews.filter(r => r.status === 'pending').length;
+
+      document.getElementById('statTotalReviews').textContent = totalReviews;
+      document.getElementById('statAvgRating').textContent = avgRating;
+      document.getElementById('statPending').textContent = pending;
+      document.getElementById('statLocations').textContent = locations.length;
+      document.getElementById('pendingBadge').textContent = pending;
+
+      document.getElementById('filterAllCount').textContent = reviews.length;
+      document.getElementById('filterPendingCount').textContent = reviews.filter(r => r.status === 'pending').length;
+      document.getElementById('filterAiCount').textContent = reviews.filter(r => r.status === 'ai_generated').length;
+      document.getElementById('filterRespondedCount').textContent = reviews.filter(r => r.status === 'responded').length;
+    }
+
+    function renderRecentReviews() {
+      const container = document.getElementById('recentReviewsList');
+      const recentReviews = reviews.slice(0, 5);
+
+      if (recentReviews.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="empty-state-title">No reviews yet</div>
+            <div class="empty-state-desc">Connect a location to start receiving reviews</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = recentReviews.map(review => renderReviewCard(review)).join('');
+    }
+
+    function renderAllReviews() {
+      const container = document.getElementById('allReviewsList');
+      const filteredReviews = currentFilter === 'all'
+        ? reviews
+        : reviews.filter(r => r.status === currentFilter);
+
+      if (filteredReviews.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </div>
+            <div class="empty-state-title">No reviews found</div>
+            <div class="empty-state-desc">Try adjusting your filters or add a new location</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filteredReviews.map(review => renderReviewCard(review)).join('');
+    }
+
+    function renderReviewCard(review) {
+      const initial = (review.authorName || 'R').charAt(0).toUpperCase();
+      const stars = Array(5).fill(0).map((_, i) =>
+        `<span class="star ${i < review.rating ? 'filled' : ''}">★</span>`
+      ).join('');
+
+      const statusLabels = {
+        pending: 'Needs Response',
+        ai_generated: 'AI Ready',
+        responded: 'Responded'
+      };
+
+      const date = new Date(review.createdAt);
+      const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+      return `
+        <div class="review-card" onclick="openReviewModal('${review.id}')">
+          <div class="review-header">
+            <div class="review-avatar">${initial}</div>
+            <div class="review-info">
+              <div class="review-author">${review.authorName || 'Anonymous'}</div>
+              <div class="review-meta">
+                <div class="review-rating">${stars}</div>
+                <span class="review-date">${formattedDate}</span>
+                <span class="review-status ${review.status}">${statusLabels[review.status] || review.status}</span>
+              </div>
+            </div>
+          </div>
+          <div class="review-content">${(review.content || '').substring(0, 200)}${(review.content || '').length > 200 ? '...' : ''}</div>
+          <div class="review-tags">
+            <span class="review-tag">${review.locationName || 'Unknown'}</span>
+            <span class="review-tag" style="text-transform: capitalize;">${review.platform || 'Unknown'}</span>
+          </div>
+          ${review.status === 'pending' ? `
+            <div class="review-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openReviewModal('${review.id}')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5"/>
+                  <path d="M2 12l10 5 10-5"/>
+                </svg>
+                Generate AI Response
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function renderLocations() {
+      const container = document.getElementById('locationsGrid');
+
+      const locationsHTML = locations.map(location => {
+        const pendingCount = reviews.filter(r => r.locationId === location.id && r.status === 'pending').length;
+
+        return `
+          <div class="location-card">
+            <div class="location-header">
+              <div class="location-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div>
+                <div class="location-name">${location.name}</div>
+                <div class="location-address">${location.address}</div>
+              </div>
+            </div>
+            <div class="location-stats">
+              <div class="location-stat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBF24" stroke="#FBBF24" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                <span class="location-stat-value">${(location.averageRating || 0).toFixed(1)}</span>
+                <span class="location-stat-label">rating</span>
+              </div>
+              <div class="location-stat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span class="location-stat-value">${location.totalReviews || 0}</span>
+                <span class="location-stat-label">reviews</span>
+              </div>
+              <div class="location-stat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span class="location-stat-value">${pendingCount}</span>
+                <span class="location-stat-label">pending</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = locationsHTML + `
+        <div class="add-location-card" onclick="showAddLocationModal()">
+          <div class="add-location-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+          <div class="add-location-title">Add Location</div>
+          <div class="add-location-desc">Connect Google Business Profile</div>
+        </div>
+      `;
+    }
+
+    function setupNavigation() {
+      document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const page = item.dataset.page;
+          navigateTo(page);
+        });
+      });
+    }
+
+    function navigateTo(page) {
+      document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+        item.classList.toggle('active', item.dataset.page === page);
+      });
+
+      document.querySelectorAll('.page-view').forEach(view => {
+        view.classList.remove('active');
+      });
+      document.getElementById(`${page}Page`).classList.add('active');
+      closeMobileMenu();
+    }
+
+    function setupFilters() {
+      document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          currentFilter = chip.dataset.filter;
+          renderAllReviews();
+        });
+      });
+    }
+
+    function setupToneSelector() {
+      document.querySelectorAll('.tone-option').forEach(option => {
+        option.addEventListener('click', () => {
+          document.querySelectorAll('.tone-option').forEach(o => o.classList.remove('active'));
+          option.classList.add('active');
+          aiSettings.tone = option.dataset.tone;
+          localStorage.setItem('reputehq_ai_settings', JSON.stringify(aiSettings));
+          showToast('AI tone updated to ' + aiSettings.tone);
+        });
+      });
+    }
+
+    function updateToneUI() {
+      document.querySelectorAll('.tone-option').forEach(option => {
+        option.classList.toggle('active', option.dataset.tone === aiSettings.tone);
+      });
+    }
+
+    function openReviewModal(reviewId) {
+      currentReview = reviews.find(r => r.id === reviewId);
+      if (!currentReview) return;
+
+      const modal = document.getElementById('reviewModal');
+
+      document.getElementById('modalAvatar').textContent = (currentReview.authorName || 'R').charAt(0).toUpperCase();
+      document.getElementById('modalAuthor').textContent = currentReview.authorName || 'Anonymous';
+      document.getElementById('modalContent').textContent = currentReview.content || 'No content';
+
+      const stars = Array(5).fill(0).map((_, i) =>
+        `<span class="star ${i < currentReview.rating ? 'filled' : ''}">★</span>`
+      ).join('');
+      document.getElementById('modalRating').innerHTML = stars;
+
+      const date = new Date(currentReview.createdAt);
+      document.getElementById('modalDate').textContent = date.toLocaleDateString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric'
+      });
+
+      const statusLabels = { pending: 'Needs Response', ai_generated: 'AI Ready', responded: 'Responded' };
+      const statusEl = document.getElementById('modalStatus');
+      statusEl.textContent = statusLabels[currentReview.status] || currentReview.status;
+      statusEl.className = `review-status ${currentReview.status}`;
+
+      document.getElementById('modalTags').innerHTML = `
+        <span class="review-tag">${currentReview.locationName || 'Unknown'}</span>
+        <span class="review-tag" style="text-transform: capitalize;">${currentReview.platform || 'Unknown'}</span>
+      `;
+
+      const textarea = document.getElementById('responseTextarea');
+      textarea.value = currentReview.aiResponse || currentReview.publishedResponse || '';
+      textarea.disabled = currentReview.status === 'responded';
+
+      document.getElementById('aiBadge').style.display = currentReview.aiResponse ? 'inline-flex' : 'none';
+
+      const actionsEl = document.getElementById('responseActions');
+      actionsEl.style.display = currentReview.status === 'responded' ? 'none' : 'flex';
+
+      modal.classList.add('active');
+    }
+
+    function closeReviewModal() {
+      document.getElementById('reviewModal').classList.remove('active');
+      currentReview = null;
+    }
+
+    async function generateAIResponse() {
+      if (!currentReview) return;
+
+      const btn = document.getElementById('generateBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Generating...';
+
+      try {
+        const response = await generateAIReviewResponse(currentReview);
+        document.getElementById('responseTextarea').value = response;
+        document.getElementById('aiBadge').style.display = 'inline-flex';
+
+        await supabaseClient
+          .from('reviews')
+          .update({ ai_response: response, status: 'ai_generated' })
+          .eq('id', currentReview.id);
+
+        currentReview.aiResponse = response;
+        currentReview.status = 'ai_generated';
+        const idx = reviews.findIndex(r => r.id === currentReview.id);
+        if (idx !== -1) reviews[idx] = { ...currentReview };
+
+        updateStats();
+        renderRecentReviews();
+        renderAllReviews();
+
+        showToast('AI response generated!', 'success');
+      } catch (error) {
+        console.error('Error generating AI response:', error);
+        showToast('Failed to generate response', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+          Generate with AI
+        `;
+      }
+    }
+
+    async function generateAIReviewResponse(review) {
+      const toneInstructions = {
+        professional: 'Use a professional, courteous, and business-appropriate tone. Be polite and formal.',
+        friendly: 'Use a warm, friendly, and approachable tone. Be personable while remaining professional.',
+        casual: 'Use a casual, relaxed tone. Be conversational and authentic while still being respectful.'
+      };
+
+      const ratingContext = review.rating >= 4
+        ? 'This is a positive review. Express gratitude and appreciation.'
+        : review.rating === 3
+        ? 'This is a neutral review. Acknowledge their feedback and express commitment to improvement.'
+        : 'This is a negative review. Apologize sincerely, acknowledge their concerns, and offer to make things right.';
+
+      const systemPrompt = `You are a helpful assistant that generates responses to customer reviews for businesses. ${toneInstructions[aiSettings.tone]} ${ratingContext} Keep the response under ${aiSettings.maxLength} characters. Be genuine and specific to the review content. Do not start with "Dear" - be more natural.`;
+
+      const userPrompt = `Generate a response to this ${review.rating}-star review:
+
+"${review.content}"
+
+Reviewer: ${review.authorName}
+Platform: ${review.platform}`;
+
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+          max_tokens: 200,
+          temperature: 0.7
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate response');
+      }
+
+      const data = await response.json();
+      return data.choices?.[0]?.message?.content?.trim() || generateFallbackResponse(review);
+    }
+
+    function generateFallbackResponse(review) {
+      const templates = {
+        professional: {
+          positive: `Thank you for your wonderful ${review.rating}-star review, ${review.authorName}. We truly appreciate your kind words and are delighted that you had a positive experience with us.`,
+          neutral: `Thank you for taking the time to share your feedback, ${review.authorName}. We value your honest assessment and are committed to improving our services.`,
+          negative: `Thank you for bringing this to our attention, ${review.authorName}. We sincerely apologize that your experience did not meet your expectations.`
+        },
+        friendly: {
+          positive: `Wow, thank you so much for the amazing review, ${review.authorName}! We're thrilled to hear you had such a great experience!`,
+          neutral: `Hey ${review.authorName}, thanks for sharing your thoughts! We appreciate your feedback and are always looking for ways to improve.`,
+          negative: `Hi ${review.authorName}, we're really sorry to hear about your experience. We want to make it right!`
+        },
+        casual: {
+          positive: `Thanks so much for the awesome review, ${review.authorName}! So happy you enjoyed your experience!`,
+          neutral: `Hey ${review.authorName}, thanks for the feedback! Let us know if there's anything we can do better next time.`,
+          negative: `Hi ${review.authorName}, sorry things didn't go as expected. We'd love to make it up to you!`
+        }
+      };
+
+      const sentiment = review.rating >= 4 ? 'positive' : review.rating === 3 ? 'neutral' : 'negative';
+      return templates[aiSettings.tone][sentiment];
+    }
+
+    async function publishResponse() {
+      if (!currentReview) return;
+
+      const response = document.getElementById('responseTextarea').value.trim();
+      if (!response) {
+        showToast('Please write a response first', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('publishBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Publishing...';
+
+      try {
+        const respondedAt = new Date().toISOString();
+
+        await supabaseClient
+          .from('reviews')
+          .update({
+            published_response: response,
+            status: 'responded',
+            responded_at: respondedAt
+          })
+          .eq('id', currentReview.id);
+
+        currentReview.publishedResponse = response;
+        currentReview.status = 'responded';
+        currentReview.respondedAt = respondedAt;
+        const idx = reviews.findIndex(r => r.id === currentReview.id);
+        if (idx !== -1) reviews[idx] = { ...currentReview };
+
+        updateStats();
+        renderRecentReviews();
+        renderAllReviews();
+
+        showToast('Response published!', 'success');
+        closeReviewModal();
+      } catch (error) {
+        console.error('Error publishing response:', error);
+        showToast('Failed to publish response', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Publish Response
+        `;
+      }
+    }
+
+    function showAddLocationModal() {
+      document.getElementById('addLocationModal').classList.add('active');
+    }
+
+    function closeAddLocationModal() {
+      document.getElementById('addLocationModal').classList.remove('active');
+      document.getElementById('locationName').value = '';
+      document.getElementById('locationAddress').value = '';
+    }
+
+    async function addLocation() {
+      const name = document.getElementById('locationName').value.trim();
+      const address = document.getElementById('locationAddress').value.trim();
+
+      if (!name || !address) {
+        showToast('Please fill in all fields', 'error');
+        return;
+      }
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('locations')
+          .insert({
+            name: name,
+            address: address,
+            google_place_id: `ChIJ${Date.now()}`,
+            average_rating: 0,
+            total_reviews: 0,
+            pending_responses: 0,
+            owner_id: currentUser.id,
+            owner_name: currentUser.name || currentUser.email,
+            status: 'active'
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        locations.unshift({
+          id: data.id,
+          name: data.name,
+          address: data.address,
+          googlePlaceId: data.google_place_id,
+          averageRating: data.average_rating,
+          totalReviews: data.total_reviews,
+          pendingResponses: data.pending_responses,
+          ownerId: data.owner_id,
+          status: data.status
+        });
+
+        updateStats();
+        renderLocations();
+        closeAddLocationModal();
+        showToast('Location added successfully!', 'success');
+      } catch (error) {
+        console.error('Error adding location:', error);
+        showToast('Failed to add location', 'error');
+      }
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+
+      toast.className = `toast ${type}`;
+      toastMessage.textContent = message;
+      toast.classList.add('show');
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function logout() {
+      localStorage.removeItem('reputehq_user');
+      window.location.href = 'login.html';
+    }
+
+    function toggleMobileMenu() {
+      document.querySelector('.sidebar').classList.toggle('open');
+      document.getElementById('mobileOverlay').classList.toggle('active');
+    }
+
+    function closeMobileMenu() {
+      document.querySelector('.sidebar').classList.remove('open');
+      document.getElementById('mobileOverlay').classList.remove('active');
+    }
+  </script>
+</body>
+</html>

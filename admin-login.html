@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - ReputeHQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0D1017 0%, #1A1F36 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 16px;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 158, 11, 0.15);
+      padding: 8px 16px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+
+    .admin-badge svg {
+      color: #F59E0B;
+    }
+
+    .admin-badge-text {
+      color: #F59E0B;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .login-title {
+      color: #FFFFFF;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 15px;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #F59E0B;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .password-input-wrapper {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      margin-top: 24px;
+    }
+
+    .btn-admin {
+      background: #F59E0B;
+      color: #0D1017;
+      border: none;
+    }
+
+    .btn-admin:hover {
+      background: #FBBF24;
+    }
+
+    .btn-admin:disabled {
+      background: #6B7280;
+      cursor: not-allowed;
+    }
+
+    .user-login-link {
+      text-align: center;
+      margin-top: 24px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 15px;
+    }
+
+    .user-login-link a {
+      color: #00D4AA;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      text-decoration: none;
+      margin-bottom: 24px;
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #FCA5A5;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success-message {
+      background: rgba(0, 212, 170, 0.15);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      color: #00D4AA;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 480px) {
+      body {
+        padding: 16px;
+      }
+      .login-card {
+        padding: 24px;
+      }
+      .login-title {
+        font-size: 24px;
+      }
+      .logo {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <a href="index.html" class="back-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M5 12L12 19M5 12L12 5"/>
+      </svg>
+      Back to home
+    </a>
+
+    <div class="login-header">
+      <img src="real-logo.png" alt="ReputeHQ" class="logo">
+      <div class="admin-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/>
+          <path d="M12 16V12M12 8H12.01"/>
+        </svg>
+        <span class="admin-badge-text">Admin Portal</span>
+      </div>
+      <h1 class="login-title">Admin Login</h1>
+      <p class="login-subtitle">Access the administration dashboard</p>
+    </div>
+
+    <div class="login-card">
+      <div id="errorMessage" class="error-message"></div>
+      <div id="successMessage" class="success-message"></div>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label class="form-label">Admin Email</label>
+          <input type="email" id="email" class="form-input" placeholder="admin@reputehq.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="password" class="form-input" placeholder="Enter admin password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword()">
+              <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-admin">
+          <span id="btnText">Access Dashboard</span>
+          <div id="btnSpinner" class="spinner" style="display: none;"></div>
+        </button>
+      </form>
+
+      <p class="user-login-link">
+        Not an admin? <a href="login.html">User Login</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://djwrwqbyujbkvvftjvud.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqd3J3cWJ5dWpia3Z2ZnRqdnVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzA5OTUsImV4cCI6MjA4NDUwNjk5NX0.bWiMUPx96w4LWK2c1k65n9l0iBd9jzGCF7n5VEDnick';
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function showError(message) {
+      const errorEl = document.getElementById('errorMessage');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+      document.getElementById('successMessage').style.display = 'none';
+    }
+
+    function showSuccess(message) {
+      const successEl = document.getElementById('successMessage');
+      successEl.textContent = message;
+      successEl.style.display = 'block';
+      document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    function setLoading(loading) {
+      const btn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const btnSpinner = document.getElementById('btnSpinner');
+
+      btn.disabled = loading;
+      btnText.textContent = loading ? 'Verifying...' : 'Access Dashboard';
+      btnSpinner.style.display = loading ? 'block' : 'none';
+    }
+
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.innerHTML = '<path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"/><circle cx="12" cy="12" r="3"/>';
+      }
+    }
+
+    // Simple hash function for password
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      document.getElementById('errorMessage').style.display = 'none';
+      setLoading(true);
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      console.log('Login attempt for:', email);
+
+      if (!email || !password) {
+        showError('Please enter both email and password.');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Hash the password
+        console.log('Hashing password...');
+        const passwordHash = await hashPassword(password);
+        console.log('Password hashed successfully');
+
+        // First check if admin exists
+        console.log('Querying Supabase for admin...');
+        const { data: admin, error: fetchError } = await supabaseClient
+          .from('admins')
+          .select('*')
+          .ilike('email', email)
+          .single();
+
+        console.log('Supabase response:', { admin: admin ? 'found' : 'not found', error: fetchError });
+
+        if (fetchError) {
+          console.error('Fetch error:', fetchError);
+          if (fetchError.code === 'PGRST116') {
+            showError('No admin account found with this email.');
+          } else {
+            showError('Unable to connect to the database. Please try again later.');
+          }
+          setLoading(false);
+          return;
+        }
+
+        if (!admin) {
+          showError('Invalid admin credentials. Please check your email and password.');
+          setLoading(false);
+          return;
+        }
+
+        // If admin has no password_hash, set it (first time setup)
+        if (!admin.password_hash) {
+          const { error: updateError } = await supabaseClient
+            .from('admins')
+            .update({ password_hash: passwordHash })
+            .eq('id', admin.id);
+
+          if (updateError) {
+            console.error('Update error:', updateError);
+            throw updateError;
+          }
+        } else if (admin.password_hash !== passwordHash) {
+          showError('Invalid admin credentials. Please check your email and password.');
+          setLoading(false);
+          return;
+        }
+
+        // Update last login time
+        await supabaseClient
+          .from('admins')
+          .update({ last_login_at: new Date().toISOString() })
+          .eq('id', admin.id);
+
+        // Store admin in localStorage
+        localStorage.setItem('reputehq_admin', JSON.stringify({
+          id: admin.id,
+          email: admin.email,
+          name: admin.name,
+          role: admin.role
+        }));
+
+        showSuccess('Login successful! Redirecting to admin dashboard...');
+
+        setTimeout(() => {
+          window.location.href = 'admin-dashboard.html';
+        }, 1000);
+
+      } catch (error) {
+        console.error('Admin login error:', error);
+        showError('An error occurred: ' + (error.message || 'Please try again.'));
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // Check if already logged in as admin
+    const storedAdmin = localStorage.getItem('reputehq_admin');
+    if (storedAdmin) {
+      window.location.href = 'admin-dashboard.html';
+    }
+  </script>
+</body>
+</html>
