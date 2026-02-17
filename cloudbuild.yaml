@@ -1,0 +1,55 @@
+# cloudbuild.yaml
+steps:
+  # 1. Install dependencies
+  - name: 'node:20'
+    id: 'Install dependencies'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        npm ci
+
+  # 2. Generate config.js from template using trigger substitutions
+  - name: 'ubuntu'
+    id: 'Generate config'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Generating config.js from template..."
+        cat config.template.js \
+          | sed "s|__SUPABASE_URL__|${_SUPABASE_URL}|g" \
+          | sed "s|__SUPABASE_ANON_KEY__|${_SUPABASE_ANON_KEY}|g" \
+          | sed "s|__OPENAI_API_KEY__|${_OPENAI_API_KEY}|g" \
+          > config.js
+        echo "config.js generated."
+
+  # 3. Build the project (if using Vite/Next/etc.)
+  - name: 'node:20'
+    id: 'Build project'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        npm run build
+
+  # 4. Deploy to Firebase Hosting (example)
+  - name: 'gcr.io/firebase-cli/firebase'
+    id: 'Deploy'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        firebase deploy --only hosting
+
+# Optional: define artifacts if needed
+artifacts:
+  objects:
+    location: 'gs://your-bucket-name/build-artifacts/'
+    paths: ['build/**']
+
+# Substitutions (these are defined in the Cloud Build triggerUI)
+substitutions:
+  _SUPABASE_URL: ''
+  _SUPABASE_ANON_KEY: ''
+  _OPENAI_API_KEY: ''
