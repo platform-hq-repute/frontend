@@ -48,7 +48,7 @@ artifacts:
     location: 'gs://reputehq-backend/build-artifacts/'
     paths: ['build/**']
 
-# Substitutions (these are defined in the Cloud Build triggerUI)
+# Substitutions (these are defined in the Cloud Build trigger UI)
 substitutions:
   _SUPABASE_URL: ''
   _SUPABASE_ANON_KEY: ''
