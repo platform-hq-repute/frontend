@@ -10,9 +10,7 @@ options:
   machineType: E2_HIGHCPU_8
 
 steps:
-  # -----------------------------------------------------
   # Step 1 — Build Docker Image
-  # -----------------------------------------------------
   - name: gcr.io/cloud-builders/docker
     id: Build
     args:
@@ -21,18 +19,14 @@ steps:
       - europe-west2-docker.pkg.dev/$PROJECT_ID/reputehq-frontend/reputehq-ai:$COMMIT_SHA
       - .
 
-  # -----------------------------------------------------
   # Step 2 — Push Image to Artifact Registry
-  # -----------------------------------------------------
   - name: gcr.io/cloud-builders/docker
     id: Push
     args:
       - push
       - europe-west2-docker.pkg.dev/$PROJECT_ID/reputehq-frontend/reputehq-ai:$COMMIT_SHA
 
-  # -----------------------------------------------------
   # Step 3 — Deploy to Cloud Run
-  # -----------------------------------------------------
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     id: Deploy
     entrypoint: gcloud
