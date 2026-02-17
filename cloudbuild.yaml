@@ -1,7 +1,6 @@
-# -------------------------------------------------------
-# ReputeHQ Production Cloud Build Configuration
-# Full CI/CD: Build → Push → Deploy to Cloud Run
-# -------------------------------------------------------
+# ---------------------------------------------
+# Cloud Build: Build → Push → Deploy to Cloud Run
+# ---------------------------------------------
 
 serviceAccount: projects/reputehq-partner-profile/serviceAccounts/github-deployer@reputehq-partner-profile.iam.gserviceaccount.com
 
@@ -10,9 +9,6 @@ logsBucket: gs://reputehq-build-logs
 options:
   machineType: E2_HIGHCPU_8
 
-# -----------------------------
-# Build & Push Steps
-# -----------------------------
 steps:
   # -----------------------------------------------------
   # Step 1 — Build Docker Image
@@ -49,8 +45,5 @@ steps:
       - --platform=managed
       - --allow-unauthenticated
 
-# -----------------------------
-# Register the image for Cloud Build
-# -----------------------------
 images:
   - europe-west2-docker.pkg.dev/$PROJECT_ID/reputehq-frontend/reputehq-ai:$COMMIT_SHA
