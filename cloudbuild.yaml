@@ -1,14 +1,12 @@
 # -------------------------------------------------------
 # ReputeHQ Production Cloud Build Configuration
+# Full CI/CD: Build → Push → Deploy to Cloud Run
 # -------------------------------------------------------
 
-# Custom service account
 serviceAccount: projects/reputehq-partner-profile/serviceAccounts/github-deployer@reputehq-partner-profile.iam.gserviceaccount.com
 
-# Logs bucket
 logsBucket: gs://reputehq-build-logs
 
-# Optional machine type
 options:
   machineType: E2_HIGHCPU_8
 
@@ -35,6 +33,21 @@ steps:
     args:
       - push
       - europe-west2-docker.pkg.dev/$PROJECT_ID/reputehq-frontend/reputehq-ai:$COMMIT_SHA
+
+  # -----------------------------------------------------
+  # Step 3 — Deploy to Cloud Run
+  # -----------------------------------------------------
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    id: Deploy
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - reputehq-frontend
+      - --image=europe-west2-docker.pkg.dev/$PROJECT_ID/reputehq-frontend/reputehq-ai:$COMMIT_SHA
+      - --region=europe-west2
+      - --platform=managed
+      - --allow-unauthenticated
 
 # -----------------------------
 # Register the image for Cloud Build
