@@ -1,5 +1,5 @@
 # ---------------------------------------------
-# Cloud Build: Build → Push → Deploy to Cloud Run
+# Cloud Build: Generate config.js → Build → Push → Deploy to Cloud Run
 # ---------------------------------------------
 
 serviceAccount: projects/reputehq-partner-profile/serviceAccounts/github-deployer@reputehq-partner-profile.iam.gserviceaccount.com
@@ -10,6 +10,23 @@ options:
   machineType: E2_HIGHCPU_8
 
 steps:
+  # Step 0 — Generate config.js from template using environment variables
+  - name: gcr.io/cloud-builders/gcloud
+    id: GenerateConfig
+    entrypoint: bash
+    env:
+      - SUPABASE_URL
+      - SUPABASE_ANON_KEY
+    args:
+      - -c
+      - |
+        echo "Generating config.js from template..."
+        mkdir -p public
+        sed -e "s|__SUPABASE_URL__|$SUPABASE_URL|g" \
+            -e "s|__SUPABASE_ANON_KEY__|$SUPABASE_ANON_KEY|g" \
+            src/config.template.js > public/config.js
+        echo "config.js generated at public/config.js"
+
   # Step 1 — Build Docker Image
   - name: gcr.io/cloud-builders/docker
     id: Build
