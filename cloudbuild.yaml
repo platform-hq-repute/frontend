@@ -10,18 +10,16 @@ options:
   machineType: E2_HIGHCPU_8
 
 # Custom substitutions for frontend-safe keys
+# These should be passed in via GitHub Actions or Cloud Build trigger
 substitutions:
-  _SUPABASE_URL: "https://backend-server-1-dev.supabase.co"  # replace with your actual Supabase project URL
-  _SUPABASE_ANON_KEY: "YOUR_ANON_KEY"                          # safe to expose to frontend
+  _SUPABASE_URL: ""       # do NOT put actual value here; inject via secret
+  _SUPABASE_ANON_KEY: ""  # do NOT put actual value here; inject via secret
 
 steps:
   # Step 0 — Generate config.js from template using custom substitutions
   - name: gcr.io/cloud-builders/gcloud
     id: GenerateConfig
     entrypoint: bash
-    env:
-      - _SUPABASE_URL
-      - _SUPABASE_ANON_KEY
     args:
       - -c
       - |
