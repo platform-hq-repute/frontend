@@ -13,17 +13,43 @@
   import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
 
   // Initialize Supabase
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/module/supabase-js.js';
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // Example: fetch user info
   async function loadUser() {
-    const { data: user, error } = await supabase.auth.getUser();
+    const { data, error } = await supabase.auth.getUser();
+    const user = data.user;
     if (user) {
       document.getElementById('userName').textContent = user.email;
+      document.getElementById('userEmail').textContent = user.email;
+      document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
     }
   }
 
   loadUser();
+
+  // Page navigation
+const navItems = document.querySelectorAll('.nav-item[data-page]');
+navItems.forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    const page = item.getAttribute('data-page');
+    navigateTo(page);
+  });
+});
+
+function navigateTo(page) {
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  const targetPage = document.getElementById(page + 'Page');
+  if (targetPage) targetPage.classList.add('active');
+
+  navItems.forEach(n => n.classList.remove('active'));
+  const activeNav = document.querySelector(`.nav-item[data-page="${page}"]`);
+  if (activeNav) activeNav.classList.add('active');
+
+  if (page === 'reviews') loadPendingBadge(); // optional for reviews count
+}
 </script>
   <style>
     * {
