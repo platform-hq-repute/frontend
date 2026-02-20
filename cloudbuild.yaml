@@ -10,13 +10,13 @@ options:
   machineType: E2_HIGHCPU_8
 
 # Custom substitutions for frontend-safe keys
-# These should be passed in via GitHub Actions or Cloud Build trigger
+# Do NOT put actual keys here — inject via GitHub secrets or Cloud Build trigger
 substitutions:
-  _SUPABASE_URL: ""       # do NOT put actual value here; inject via secret
-  _SUPABASE_ANON_KEY: ""  # do NOT put actual value here; inject via secret
+  _SUPABASE_URL: ""
+  _SUPABASE_ANON_KEY: ""
 
 steps:
-  # Step 0 — Generate config.js from template using custom substitutions
+  # Step 0 — Generate config.js at root from template using substitutions
   - name: gcr.io/cloud-builders/gcloud
     id: GenerateConfig
     entrypoint: bash
@@ -24,11 +24,10 @@ steps:
       - -c
       - |
         echo "Generating config.js from template..."
-        mkdir -p public
         sed -e "s|__SUPABASE_URL__|${_SUPABASE_URL}|g" \
             -e "s|__SUPABASE_ANON_KEY__|${_SUPABASE_ANON_KEY}|g" \
-            src/config.template.js > public/config.js
-        echo "config.js generated at public/config.js"
+            src/config.template.js > config.js
+        echo "config.js generated at /app/config.js"
 
   # Step 1 — Build Docker Image
   - name: gcr.io/cloud-builders/docker
