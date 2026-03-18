@@ -4,8 +4,8 @@ FROM python:3.11-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy all files (includes generated config.js from the build step)
-COPY . .
+# Only copy the public folder (all that's needed to serve the web frontend)
+COPY public/ ./public/
 
 # Set Cloud Run port
 ENV PORT 8080
