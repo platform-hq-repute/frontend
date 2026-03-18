@@ -8,49 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="/config.js"></script>
-<script type="module">
-  import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
-
-  // Initialize Supabase
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/module/supabase-js.js';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // Example: fetch user info
-  async function loadUser() {
-    const { data, error } = await supabase.auth.getUser();
-    const user = data.user;
-    if (user) {
-      document.getElementById('userName').textContent = user.email;
-      document.getElementById('userEmail').textContent = user.email;
-      document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
-    }
-  }
-
-  loadUser();
-
-  // Page navigation
-const navItems = document.querySelectorAll('.nav-item[data-page]');
-navItems.forEach(item => {
-  item.addEventListener('click', e => {
-    e.preventDefault();
-    const page = item.getAttribute('data-page');
-    navigateTo(page);
-  });
-});
-
-function navigateTo(page) {
-  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-  const targetPage = document.getElementById(page + 'Page');
-  if (targetPage) targetPage.classList.add('active');
-
-  navItems.forEach(n => n.classList.remove('active'));
-  const activeNav = document.querySelector(`.nav-item[data-page="${page}"]`);
-  if (activeNav) activeNav.classList.add('active');
-
-  if (page === 'reviews') loadPendingBadge(); // optional for reviews count
-}
-</script>
+  <script src="/config.js"></script>
   <style>
     * {
       margin: 0;
@@ -1194,7 +1152,7 @@ function navigateTo(page) {
           <div class="user-email" id="userEmail">user@example.com</div>
         </div>
       </div>
-      <a href="#" class="nav-item" onclick="logout(); return false;">
+      <a href="#" class="nav-item" onclick="logout()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <polyline points="16 17 21 12 16 7"/>
@@ -1494,8 +1452,12 @@ function navigateTo(page) {
   </div>
 
   <script>
-    // Configuration
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Configuration — loaded from config.js which is generated at build time
+    const SUPABASE_URL = window.REPUTEHQ_CONFIG.SUPABASE_URL;
+    const SUPABASE_ANON_KEY = window.REPUTEHQ_CONFIG.SUPABASE_ANON_KEY;
+    const OPENAI_API_KEY = window.REPUTEHQ_CONFIG.OPENAI_API_KEY;
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // State
     let currentUser = null;
@@ -1510,6 +1472,7 @@ function navigateTo(page) {
 
     // Initialize
     document.addEventListener('DOMContentLoaded', async () => {
+      // Check if user is logged in
       const storedUser = localStorage.getItem('reputehq_user');
       if (!storedUser) {
         window.location.href = 'login.html';
@@ -1519,13 +1482,17 @@ function navigateTo(page) {
       currentUser = JSON.parse(storedUser);
       updateUserUI();
 
+      // Load saved AI settings
       const savedSettings = localStorage.getItem('reputehq_ai_settings');
       if (savedSettings) {
         aiSettings = JSON.parse(savedSettings);
         updateToneUI();
       }
 
+      // Load data
       await loadData();
+
+      // Setup event listeners
       setupNavigation();
       setupFilters();
       setupToneSelector();
@@ -1551,7 +1518,7 @@ function navigateTo(page) {
     async function loadLocations() {
       if (!currentUser?.id) return;
 
-      const { data, error } = await supabaseClient
+      const { data, error } = await supabase
         .from('locations')
         .select('*')
         .eq('owner_id', currentUser.id)
@@ -1567,9 +1534,9 @@ function navigateTo(page) {
         name: row.name,
         address: row.address,
         googlePlaceId: row.google_place_id,
-        averageRating: row.average_rating || 0,
-        totalReviews: row.total_reviews || 0,
-        pendingResponses: row.pending_responses || 0,
+        averageRating: row.average_rating,
+        totalReviews: row.total_reviews,
+        pendingResponses: row.pending_responses,
         ownerId: row.owner_id,
         status: row.status
       }));
@@ -1582,7 +1549,7 @@ function navigateTo(page) {
       }
 
       const locationIds = locations.map(l => l.id);
-      const { data, error } = await supabaseClient
+      const { data, error } = await supabase
         .from('reviews')
         .select('*')
         .in('location_id', locationIds)
@@ -1623,6 +1590,7 @@ function navigateTo(page) {
       document.getElementById('statLocations').textContent = locations.length;
       document.getElementById('pendingBadge').textContent = pending;
 
+      // Update filter counts
       document.getElementById('filterAllCount').textContent = reviews.length;
       document.getElementById('filterPendingCount').textContent = reviews.filter(r => r.status === 'pending').length;
       document.getElementById('filterAiCount').textContent = reviews.filter(r => r.status === 'ai_generated').length;
@@ -1677,7 +1645,7 @@ function navigateTo(page) {
     }
 
     function renderReviewCard(review) {
-      const initial = (review.authorName || 'R').charAt(0).toUpperCase();
+      const initial = review.authorName.charAt(0).toUpperCase();
       const stars = Array(5).fill(0).map((_, i) =>
         `<span class="star ${i < review.rating ? 'filled' : ''}">★</span>`
       ).join('');
@@ -1696,18 +1664,18 @@ function navigateTo(page) {
           <div class="review-header">
             <div class="review-avatar">${initial}</div>
             <div class="review-info">
-              <div class="review-author">${review.authorName || 'Anonymous'}</div>
+              <div class="review-author">${review.authorName}</div>
               <div class="review-meta">
                 <div class="review-rating">${stars}</div>
                 <span class="review-date">${formattedDate}</span>
-                <span class="review-status ${review.status}">${statusLabels[review.status] || review.status}</span>
+                <span class="review-status ${review.status}">${statusLabels[review.status]}</span>
               </div>
             </div>
           </div>
-          <div class="review-content">${(review.content || '').substring(0, 200)}${(review.content || '').length > 200 ? '...' : ''}</div>
+          <div class="review-content">${review.content.substring(0, 200)}${review.content.length > 200 ? '...' : ''}</div>
           <div class="review-tags">
-            <span class="review-tag">${review.locationName || 'Unknown'}</span>
-            <span class="review-tag" style="text-transform: capitalize;">${review.platform || 'Unknown'}</span>
+            <span class="review-tag">${review.locationName}</span>
+            <span class="review-tag" style="text-transform: capitalize;">${review.platform}</span>
           </div>
           ${review.status === 'pending' ? `
             <div class="review-actions">
@@ -1750,14 +1718,14 @@ function navigateTo(page) {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBF24" stroke="#FBBF24" stroke-width="2">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                 </svg>
-                <span class="location-stat-value">${(location.averageRating || 0).toFixed(1)}</span>
+                <span class="location-stat-value">${location.averageRating.toFixed(1)}</span>
                 <span class="location-stat-label">rating</span>
               </div>
               <div class="location-stat">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="2">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
-                <span class="location-stat-value">${location.totalReviews || 0}</span>
+                <span class="location-stat-value">${location.totalReviews}</span>
                 <span class="location-stat-label">reviews</span>
               </div>
               <div class="location-stat">
@@ -1787,6 +1755,7 @@ function navigateTo(page) {
       `;
     }
 
+    // Navigation
     function setupNavigation() {
       document.querySelectorAll('.nav-item[data-page]').forEach(item => {
         item.addEventListener('click', (e) => {
@@ -1798,17 +1767,19 @@ function navigateTo(page) {
     }
 
     function navigateTo(page) {
+      // Update nav items
       document.querySelectorAll('.nav-item[data-page]').forEach(item => {
         item.classList.toggle('active', item.dataset.page === page);
       });
 
+      // Update page views
       document.querySelectorAll('.page-view').forEach(view => {
         view.classList.remove('active');
       });
       document.getElementById(`${page}Page`).classList.add('active');
-      closeMobileMenu();
     }
 
+    // Filters
     function setupFilters() {
       document.querySelectorAll('.filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
@@ -1820,6 +1791,7 @@ function navigateTo(page) {
       });
     }
 
+    // Tone Selector
     function setupToneSelector() {
       document.querySelectorAll('.tone-option').forEach(option => {
         option.addEventListener('click', () => {
@@ -1838,44 +1810,57 @@ function navigateTo(page) {
       });
     }
 
+    // Review Modal
     function openReviewModal(reviewId) {
       currentReview = reviews.find(r => r.id === reviewId);
       if (!currentReview) return;
 
       const modal = document.getElementById('reviewModal');
 
-      document.getElementById('modalAvatar').textContent = (currentReview.authorName || 'R').charAt(0).toUpperCase();
-      document.getElementById('modalAuthor').textContent = currentReview.authorName || 'Anonymous';
-      document.getElementById('modalContent').textContent = currentReview.content || 'No content';
+      // Update modal content
+      document.getElementById('modalAvatar').textContent = currentReview.authorName.charAt(0).toUpperCase();
+      document.getElementById('modalAuthor').textContent = currentReview.authorName;
+      document.getElementById('modalContent').textContent = currentReview.content;
 
+      // Rating
       const stars = Array(5).fill(0).map((_, i) =>
         `<span class="star ${i < currentReview.rating ? 'filled' : ''}">★</span>`
       ).join('');
       document.getElementById('modalRating').innerHTML = stars;
 
+      // Date
       const date = new Date(currentReview.createdAt);
       document.getElementById('modalDate').textContent = date.toLocaleDateString('en-US', {
         month: 'long', day: 'numeric', year: 'numeric'
       });
 
+      // Status
       const statusLabels = { pending: 'Needs Response', ai_generated: 'AI Ready', responded: 'Responded' };
       const statusEl = document.getElementById('modalStatus');
-      statusEl.textContent = statusLabels[currentReview.status] || currentReview.status;
+      statusEl.textContent = statusLabels[currentReview.status];
       statusEl.className = `review-status ${currentReview.status}`;
 
+      // Tags
       document.getElementById('modalTags').innerHTML = `
-        <span class="review-tag">${currentReview.locationName || 'Unknown'}</span>
-        <span class="review-tag" style="text-transform: capitalize;">${currentReview.platform || 'Unknown'}</span>
+        <span class="review-tag">${currentReview.locationName}</span>
+        <span class="review-tag" style="text-transform: capitalize;">${currentReview.platform}</span>
       `;
 
+      // Response
       const textarea = document.getElementById('responseTextarea');
       textarea.value = currentReview.aiResponse || currentReview.publishedResponse || '';
       textarea.disabled = currentReview.status === 'responded';
 
+      // AI Badge
       document.getElementById('aiBadge').style.display = currentReview.aiResponse ? 'inline-flex' : 'none';
 
+      // Buttons
       const actionsEl = document.getElementById('responseActions');
-      actionsEl.style.display = currentReview.status === 'responded' ? 'none' : 'flex';
+      if (currentReview.status === 'responded') {
+        actionsEl.style.display = 'none';
+      } else {
+        actionsEl.style.display = 'flex';
+      }
 
       modal.classList.add('active');
     }
@@ -1885,6 +1870,7 @@ function navigateTo(page) {
       currentReview = null;
     }
 
+    // AI Response Generation
     async function generateAIResponse() {
       if (!currentReview) return;
 
@@ -1897,11 +1883,13 @@ function navigateTo(page) {
         document.getElementById('responseTextarea').value = response;
         document.getElementById('aiBadge').style.display = 'inline-flex';
 
-        await supabaseClient
+        // Update in database
+        await supabase
           .from('reviews')
           .update({ ai_response: response, status: 'ai_generated' })
           .eq('id', currentReview.id);
 
+        // Update local state
         currentReview.aiResponse = response;
         currentReview.status = 'ai_generated';
         const idx = reviews.findIndex(r => r.id === currentReview.id);
@@ -1941,7 +1929,12 @@ function navigateTo(page) {
         ? 'This is a neutral review. Acknowledge their feedback and express commitment to improvement.'
         : 'This is a negative review. Apologize sincerely, acknowledge their concerns, and offer to make things right.';
 
-      const systemPrompt = `You are a helpful assistant that generates responses to customer reviews for businesses. ${toneInstructions[aiSettings.tone]} ${ratingContext} Keep the response under ${aiSettings.maxLength} characters. Be genuine and specific to the review content. Do not start with "Dear" - be more natural.`;
+      const systemPrompt = `You are a helpful assistant that generates responses to customer reviews for businesses.
+${toneInstructions[aiSettings.tone]}
+${ratingContext}
+Keep the response under ${aiSettings.maxLength} characters.
+Be genuine and specific to the review content.
+Do not start with "Dear" - be more natural.`;
 
       const userPrompt = `Generate a response to this ${review.rating}-star review:
 
@@ -1998,6 +1991,7 @@ Platform: ${review.platform}`;
       return templates[aiSettings.tone][sentiment];
     }
 
+    // Publish Response
     async function publishResponse() {
       if (!currentReview) return;
 
@@ -2014,7 +2008,8 @@ Platform: ${review.platform}`;
       try {
         const respondedAt = new Date().toISOString();
 
-        await supabaseClient
+        // Update in database
+        await supabase
           .from('reviews')
           .update({
             published_response: response,
@@ -2023,6 +2018,7 @@ Platform: ${review.platform}`;
           })
           .eq('id', currentReview.id);
 
+        // Update local state
         currentReview.publishedResponse = response;
         currentReview.status = 'responded';
         currentReview.respondedAt = respondedAt;
@@ -2050,6 +2046,7 @@ Platform: ${review.platform}`;
       }
     }
 
+    // Add Location
     function showAddLocationModal() {
       document.getElementById('addLocationModal').classList.add('active');
     }
@@ -2070,7 +2067,7 @@ Platform: ${review.platform}`;
       }
 
       try {
-        const { data, error } = await supabaseClient
+        const { data, error } = await supabase
           .from('locations')
           .insert({
             name: name,
@@ -2088,6 +2085,7 @@ Platform: ${review.platform}`;
 
         if (error) throw error;
 
+        // Add to local state
         locations.unshift({
           id: data.id,
           name: data.name,
@@ -2110,6 +2108,7 @@ Platform: ${review.platform}`;
       }
     }
 
+    // Toast
     function showToast(message, type = 'success') {
       const toast = document.getElementById('toast');
       const toastMessage = document.getElementById('toastMessage');
@@ -2123,11 +2122,13 @@ Platform: ${review.platform}`;
       }, 3000);
     }
 
+    // Logout
     function logout() {
       localStorage.removeItem('reputehq_user');
       window.location.href = 'login.html';
     }
 
+    // Mobile Menu
     function toggleMobileMenu() {
       document.querySelector('.sidebar').classList.toggle('open');
       document.getElementById('mobileOverlay').classList.toggle('active');
@@ -2137,6 +2138,13 @@ Platform: ${review.platform}`;
       document.querySelector('.sidebar').classList.remove('open');
       document.getElementById('mobileOverlay').classList.remove('active');
     }
+
+    // Close mobile menu when navigating
+    const originalNavigateTo = navigateTo;
+    navigateTo = function(page) {
+      closeMobileMenu();
+      originalNavigateTo(page);
+    };
   </script>
 </body>
 </html>

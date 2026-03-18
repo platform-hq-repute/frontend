@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/config.js"></script>
   <style>
     * {
       margin: 0;
@@ -297,8 +298,8 @@
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://djwrwqbyujbkvvftjvud.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqd3J3cWJ5dWpia3Z2ZnRqdnVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzA5OTUsImV4cCI6MjA4NDUwNjk5NX0.bWiMUPx96w4LWK2c1k65n9l0iBd9jzGCF7n5VEDnick';
+    const SUPABASE_URL = window.REPUTEHQ_CONFIG.SUPABASE_URL;
+    const SUPABASE_ANON_KEY = window.REPUTEHQ_CONFIG.SUPABASE_ANON_KEY;
 
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
