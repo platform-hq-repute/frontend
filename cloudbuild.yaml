@@ -1,6 +1,6 @@
 # ---------------------------------------------
 # Cloud Build: Generate config.js → Build → Push → Deploy to Cloud Run
-# Run this from the web/ directory context
+# Run this from the repo root (web files are at root level)
 # ---------------------------------------------
 
 serviceAccount: projects/reputehq-partner-profile/serviceAccounts/github-deployer@reputehq-partner-profile.iam.gserviceaccount.com
@@ -29,9 +29,9 @@ steps:
         sed -e "s|__SUPABASE_URL__|${_SUPABASE_URL}|g" \
             -e "s|__SUPABASE_ANON_KEY__|${_SUPABASE_ANON_KEY}|g" \
             -e "s|__OPENAI_API_KEY__|${_OPENAI_API_KEY}|g" \
-            web/config.template.js > web/config.js
+            config.template.js > config.js
         echo "config.js generated:"
-        cat web/config.js
+        cat config.js
 
   # Step 1 — Build Docker Image (context is the web/ folder)
   - name: gcr.io/cloud-builders/docker
@@ -41,8 +41,8 @@ steps:
       - -t
       - europe-west2-docker.pkg.dev/$PROJECT_ID/reputehq-frontend/reputehq-ai:$COMMIT_SHA
       - -f
-      - web/Dockerfile
-      - web/
+      - Dockerfile
+      - .
 
   # Step 2 — Push Image to Artifact Registry
   - name: gcr.io/cloud-builders/docker
