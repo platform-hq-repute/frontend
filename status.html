@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Status - ReputeHQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FFFFFF;
+      color: #1A1F36;
+      overflow-x: hidden;
+    }
+
+    :root {
+      --primary: #1A1F36;
+      --accent: #00D4AA;
+      --accent-dark: #00B894;
+      --text-primary: #1A1F36;
+      --text-secondary: #6B7280;
+      --text-muted: #9CA3AF;
+      --bg-white: #FFFFFF;
+      --bg-light: #F7F8FA;
+      --bg-dark: #1A1F36;
+      --border-light: #E5E7EB;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .fade-in-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .fade-in-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .fade-in-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .fade-in-up-delay-4 { animation-delay: 0.4s; opacity: 0; }
+    .fade-in-up-delay-5 { animation-delay: 0.5s; opacity: 0; }
+    .fade-in-up-delay-6 { animation-delay: 0.6s; opacity: 0; }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 80px;
+      background: var(--bg-white);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .nav-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--primary);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-light);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--border-light);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+    }
+
+    .btn-large {
+      padding: 16px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 160px 80px 80px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F7F8FA 100%);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-shape {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.08) 0%, rgba(0, 212, 170, 0.02) 100%);
+      right: -200px;
+      top: -200px;
+      pointer-events: none;
+    }
+
+    .hero-bg-shape-2 {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(26, 31, 54, 0.05) 0%, rgba(26, 31, 54, 0.01) 100%);
+      left: -150px;
+      bottom: -150px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0, 212, 170, 0.1);
+      padding: 16px 32px;
+      border-radius: 100px;
+      margin-top: 16px;
+    }
+
+    .status-indicator {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    .status-text {
+      color: var(--accent-dark);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-size: 18px;
+      line-height: 1.6;
+      margin-top: 24px;
+    }
+
+    /* Services Section */
+    .services {
+      padding: 80px;
+      background: var(--bg-white);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-label {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .service-card {
+      background: var(--bg-light);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+      border: 1px solid transparent;
+    }
+
+    .service-card:hover {
+      background: var(--bg-white);
+      border-color: var(--border-light);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .service-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .service-icon svg {
+      color: var(--primary);
+      width: 24px;
+      height: 24px;
+    }
+
+    .service-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .service-status-text {
+      font-size: 14px;
+      color: var(--accent-dark);
+      font-weight: 500;
+    }
+
+    .service-metrics {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .metric {
+      text-align: right;
+    }
+
+    .metric-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .service-status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* Uptime Section */
+    .uptime {
+      padding: 80px;
+      background: var(--bg-light);
+    }
+
+    .uptime-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .uptime-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .uptime-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .uptime-period {
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .uptime-chart {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .uptime-bars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      height: 40px;
+      align-items: flex-end;
+    }
+
+    .uptime-bar {
+      flex: 1;
+      background: var(--accent);
+      border-radius: 4px;
+      min-height: 100%;
+      transition: all 0.2s;
+    }
+
+    .uptime-bar:hover {
+      background: var(--accent-dark);
+      transform: scaleY(1.05);
+    }
+
+    .uptime-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .uptime-stat {
+      text-align: center;
+    }
+
+    .uptime-stat-value {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .uptime-stat-value span {
+      color: var(--accent);
+    }
+
+    .uptime-stat-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Incidents Section */
+    .incidents {
+      padding: 80px;
+      background: var(--bg-white);
+    }
+
+    .incidents-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .incidents-header {
+      margin-bottom: 32px;
+    }
+
+    .incidents-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .incidents-subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .incidents-list {
+      background: var(--bg-light);
+      border-radius: 16px;
+      padding: 48px;
+      text-align: center;
+    }
+
+    .no-incidents-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(0, 212, 170, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .no-incidents-icon svg {
+      color: var(--accent);
+      width: 32px;
+      height: 32px;
+    }
+
+    .no-incidents-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .no-incidents-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* Subscribe Section */
+    .subscribe {
+      padding: 80px;
+      background: var(--bg-dark);
+      text-align: center;
+    }
+
+    .subscribe-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .subscribe-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .subscribe-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 16px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .subscribe-form {
+      display: flex;
+      gap: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .subscribe-input {
+      flex: 1;
+      padding: 16px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .subscribe-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .subscribe-input:focus {
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .subscribe-options {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .subscribe-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+    }
+
+    .subscribe-option input {
+      accent-color: var(--accent);
+    }
+
+    /* Footer */
+    .footer {
+      background: #0D1017;
+      padding: 80px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-brand {
+      max-width: 300px;
+    }
+
+    .footer-brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .footer-brand-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .footer-brand-desc {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 80px;
+      flex-wrap: wrap;
+    }
+
+    .footer-column h4 {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-column a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .footer-copyright {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 14px;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-legal a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover {
+      color: white;
+    }
+
+    /* Icons */
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .icon-small {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .nav, .hero, .services, .uptime, .incidents, .subscribe, .footer {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .hero-title {
+        font-size: 40px;
+      }
+
+      .section-title {
+        font-size: 30px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        gap: 20px;
+        padding: 16px 24px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .hero {
+        padding: 140px 24px 60px;
+      }
+
+      .hero-title {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .status-badge {
+        padding: 12px 24px;
+      }
+
+      .status-text {
+        font-size: 16px;
+      }
+
+      .services, .uptime, .incidents, .subscribe, .footer {
+        padding: 60px 24px;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .service-card {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+
+      .service-info {
+        flex-direction: column;
+      }
+
+      .service-metrics {
+        justify-content: center;
+      }
+
+      .metric {
+        text-align: center;
+      }
+
+      .uptime-header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .uptime-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .subscribe-form {
+        flex-direction: column;
+      }
+
+      .subscribe-options {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .footer-content {
+        flex-direction: column;
+      }
+
+      .footer-links {
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav fade-in-up fade-in-up-delay-1">
+    <a href="index.html" class="nav-brand">
+      <img src="real-logo.png" alt="ReputeHQ" class="nav-logo">
+      <span class="nav-title">ReputeHQ</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="help-center.html" class="nav-link">Help Center</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+      <a href="login.html" class="btn btn-ghost">Login</a>
+      <a href="signup.html" class="btn btn-primary">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg-shape"></div>
+    <div class="hero-bg-shape-2"></div>
+
+    <div class="hero-content fade-in-up fade-in-up-delay-2">
+      <h1 class="hero-title">System Status</h1>
+      <div class="status-badge">
+        <span class="status-indicator"></span>
+        <span class="status-text">All Systems Operational</span>
+      </div>
+      <p class="hero-subtitle">
+        Monitor the real-time status of ReputeHQ services. We are committed to maintaining 99.9% uptime for all our systems.
+      </p>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services fade-in-up fade-in-up-delay-3">
+    <div class="section-header">
+      <div class="section-label">Current Status</div>
+      <h2 class="section-title">Service Overview</h2>
+    </div>
+
+    <div class="services-grid">
+      <!-- API -->
+      <div class="service-card">
+        <div class="service-info">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+              <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="service-name">API</div>
+            <div class="service-status-text">Operational</div>
+          </div>
+        </div>
+        <div class="service-metrics">
+          <div class="metric">
+            <div class="metric-value">99.98%</div>
+            <div class="metric-label">Uptime</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">45ms</div>
+            <div class="metric-label">Response</div>
+          </div>
+          <div class="service-status-indicator"></div>
+        </div>
+      </div>
+
+      <!-- Web Application -->
+      <div class="service-card">
+        <div class="service-info">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <div>
+            <div class="service-name">Web Application</div>
+            <div class="service-status-text">Operational</div>
+          </div>
+        </div>
+        <div class="service-metrics">
+          <div class="metric">
+            <div class="metric-value">99.99%</div>
+            <div class="metric-label">Uptime</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">120ms</div>
+            <div class="metric-label">Response</div>
+          </div>
+          <div class="service-status-indicator"></div>
+        </div>
+      </div>
+
+      <!-- Mobile App -->
+      <div class="service-card">
+        <div class="service-info">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+          </div>
+          <div>
+            <div class="service-name">Mobile App</div>
+            <div class="service-status-text">Operational</div>
+          </div>
+        </div>
+        <div class="service-metrics">
+          <div class="metric">
+            <div class="metric-value">99.95%</div>
+            <div class="metric-label">Uptime</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">85ms</div>
+            <div class="metric-label">Response</div>
+          </div>
+          <div class="service-status-indicator"></div>
+        </div>
+      </div>
+
+      <!-- AI Engine -->
+      <div class="service-card">
+        <div class="service-info">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <div class="service-name">AI Engine</div>
+            <div class="service-status-text">Operational</div>
+          </div>
+        </div>
+        <div class="service-metrics">
+          <div class="metric">
+            <div class="metric-value">99.92%</div>
+            <div class="metric-label">Uptime</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">230ms</div>
+            <div class="metric-label">Response</div>
+          </div>
+          <div class="service-status-indicator"></div>
+        </div>
+      </div>
+
+      <!-- Review Sync -->
+      <div class="service-card">
+        <div class="service-info">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"/>
+              <polyline points="1 20 1 14 7 14"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+          </div>
+          <div>
+            <div class="service-name">Review Sync</div>
+            <div class="service-status-text">Operational</div>
+          </div>
+        </div>
+        <div class="service-metrics">
+          <div class="metric">
+            <div class="metric-value">99.97%</div>
+            <div class="metric-label">Uptime</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">65ms</div>
+            <div class="metric-label">Response</div>
+          </div>
+          <div class="service-status-indicator"></div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="service-card">
+        <div class="service-info">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <div>
+            <div class="service-name">Notifications</div>
+            <div class="service-status-text">Operational</div>
+          </div>
+        </div>
+        <div class="service-metrics">
+          <div class="metric">
+            <div class="metric-value">99.99%</div>
+            <div class="metric-label">Uptime</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">28ms</div>
+            <div class="metric-label">Response</div>
+          </div>
+          <div class="service-status-indicator"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Uptime Section -->
+  <section class="uptime fade-in-up fade-in-up-delay-4">
+    <div class="uptime-container">
+      <div class="uptime-header">
+        <h2 class="uptime-title">Uptime History</h2>
+        <span class="uptime-period">Last 90 days</span>
+      </div>
+
+      <div class="uptime-chart">
+        <div class="uptime-bars">
+          <!-- 90 bars representing each day -->
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+          <div class="uptime-bar"></div>
+        </div>
+
+        <div class="uptime-stats">
+          <div class="uptime-stat">
+            <div class="uptime-stat-value"><span>99.97%</span></div>
+            <div class="uptime-stat-label">Overall Uptime</div>
+          </div>
+          <div class="uptime-stat">
+            <div class="uptime-stat-value">0</div>
+            <div class="uptime-stat-label">Major Incidents</div>
+          </div>
+          <div class="uptime-stat">
+            <div class="uptime-stat-value">89ms</div>
+            <div class="uptime-stat-label">Avg Response Time</div>
+          </div>
+          <div class="uptime-stat">
+            <div class="uptime-stat-value">90</div>
+            <div class="uptime-stat-label">Days Monitored</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Incidents Section -->
+  <section class="incidents fade-in-up fade-in-up-delay-5">
+    <div class="incidents-container">
+      <div class="incidents-header">
+        <h2 class="incidents-title">Incident History</h2>
+        <p class="incidents-subtitle">Recent incidents and maintenance events</p>
+      </div>
+
+      <div class="incidents-list">
+        <div class="no-incidents-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="no-incidents-text">No Recent Incidents</div>
+        <p class="no-incidents-desc">All systems have been running smoothly. No incidents reported in the last 90 days.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Subscribe Section -->
+  <section class="subscribe fade-in-up fade-in-up-delay-6">
+    <div class="subscribe-content">
+      <h2 class="subscribe-title">Subscribe to Updates</h2>
+      <p class="subscribe-subtitle">Get notified about system status changes, scheduled maintenance, and incident reports delivered to your inbox.</p>
+
+      <form class="subscribe-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to status updates!');">
+        <input type="email" class="subscribe-input" placeholder="Enter your email address" required>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+
+      <div class="subscribe-options">
+        <label class="subscribe-option">
+          <input type="checkbox" checked>
+          <span>All incidents</span>
+        </label>
+        <label class="subscribe-option">
+          <input type="checkbox" checked>
+          <span>Scheduled maintenance</span>
+        </label>
+        <label class="subscribe-option">
+          <input type="checkbox">
+          <span>Performance updates</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-brand-header">
+          <img src="real-logo.png" alt="ReputeHQ" class="footer-logo">
+          <span class="footer-brand-name">ReputeHQ</span>
+        </div>
+        <p class="footer-brand-desc">Empowering businesses to build stronger customer relationships through intelligent review management.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Product</h4>
+          <a href="index.html#features">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">Integrations</a>
+          <a href="#">API</a>
+        </div>
+        <div class="footer-column">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <a href="help-center.html">Help Center</a>
+          <a href="contact.html">Contact</a>
+          <a href="status.html">Status</a>
+          <a href="security.html">Security</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 ReputeHQ. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="service.html">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
