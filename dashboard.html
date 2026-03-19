@@ -1453,11 +1453,18 @@
 
   <script>
     // Configuration — loaded from config.js which is generated at build time
-    const SUPABASE_URL = window.REPUTEHQ_CONFIG.SUPABASE_URL;
-    const SUPABASE_ANON_KEY = window.REPUTEHQ_CONFIG.SUPABASE_ANON_KEY;
-    const OPENAI_API_KEY = window.REPUTEHQ_CONFIG.OPENAI_API_KEY;
+    const _cfg = window.REPUTEHQ_CONFIG || {};
+    const SUPABASE_URL = _cfg.SUPABASE_URL || '';
+    const SUPABASE_ANON_KEY = _cfg.SUPABASE_ANON_KEY || '';
+    const OPENAI_API_KEY = _cfg.OPENAI_API_KEY || '';
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      console.error('config.js not loaded or missing Supabase keys — data features disabled');
+    }
+
+    const db = SUPABASE_URL && SUPABASE_ANON_KEY
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
 
     // State
     let currentUser = null;
@@ -1518,7 +1525,7 @@
     async function loadLocations() {
       if (!currentUser?.id) return;
 
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('locations')
         .select('*')
         .eq('owner_id', currentUser.id)
@@ -1549,7 +1556,7 @@
       }
 
       const locationIds = locations.map(l => l.id);
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('reviews')
         .select('*')
         .in('location_id', locationIds)
@@ -1884,7 +1891,7 @@
         document.getElementById('aiBadge').style.display = 'inline-flex';
 
         // Update in database
-        await supabase
+        await db
           .from('reviews')
           .update({ ai_response: response, status: 'ai_generated' })
           .eq('id', currentReview.id);
@@ -2009,7 +2016,7 @@ Platform: ${review.platform}`;
         const respondedAt = new Date().toISOString();
 
         // Update in database
-        await supabase
+        await db
           .from('reviews')
           .update({
             published_response: response,
@@ -2067,7 +2074,7 @@ Platform: ${review.platform}`;
       }
 
       try {
-        const { data, error } = await supabase
+        const { data, error } = await db
           .from('locations')
           .insert({
             name: name,
