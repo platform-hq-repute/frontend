@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security - ReputeHQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FFFFFF;
+      color: #1A1F36;
+      overflow-x: hidden;
+    }
+
+    :root {
+      --primary: #1A1F36;
+      --accent: #00D4AA;
+      --accent-dark: #00B894;
+      --text-primary: #1A1F36;
+      --text-secondary: #6B7280;
+      --text-muted: #9CA3AF;
+      --bg-white: #FFFFFF;
+      --bg-light: #F7F8FA;
+      --bg-dark: #1A1F36;
+      --border-light: #E5E7EB;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .fade-in-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .fade-in-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .fade-in-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .fade-in-up-delay-4 { animation-delay: 0.4s; opacity: 0; }
+    .fade-in-up-delay-5 { animation-delay: 0.5s; opacity: 0; }
+    .fade-in-up-delay-6 { animation-delay: 0.6s; opacity: 0; }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 80px;
+      background: var(--bg-white);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .nav-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--primary);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-light);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--border-light);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+    }
+
+    .btn-dark {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-dark:hover {
+      background: #2D3555;
+      transform: translateY(-2px);
+    }
+
+    .btn-large {
+      padding: 16px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 180px 80px 100px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F7F8FA 100%);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .hero-bg-shape {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.08) 0%, rgba(0, 212, 170, 0.02) 100%);
+      right: -200px;
+      top: -200px;
+      pointer-events: none;
+    }
+
+    .hero-bg-shape-2 {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(26, 31, 54, 0.05) 0%, rgba(26, 31, 54, 0.01) 100%);
+      left: -150px;
+      bottom: -150px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+    }
+
+    .hero-icon svg {
+      color: var(--primary);
+    }
+
+    .hero-title {
+      font-size: 52px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .hero-title .highlight {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-size: 20px;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Section Styles */
+    .section {
+      padding: 100px 80px;
+    }
+
+    .section-light {
+      background: var(--bg-white);
+    }
+
+    .section-gray {
+      background: var(--bg-light);
+    }
+
+    .section-dark {
+      background: var(--bg-dark);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-label {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 44px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+
+    .section-title-light {
+      color: white;
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .section-subtitle-light {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Security Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--bg-light);
+      border-radius: 16px;
+      padding: 36px;
+      transition: all 0.3s;
+      border: 1px solid transparent;
+    }
+
+    .feature-card:hover {
+      background: var(--bg-white);
+      border-color: var(--border-light);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .feature-icon svg {
+      color: var(--primary);
+    }
+
+    .feature-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .feature-desc {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* Security Practices Section */
+    .practices-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .practice-item {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .practice-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .practice-number {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .practice-content {
+      flex: 1;
+    }
+
+    .practice-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .practice-desc {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* Responsible Disclosure Section */
+    .disclosure-container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .disclosure-box {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 48px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      margin-top: 40px;
+    }
+
+    .disclosure-text {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .disclosure-list {
+      text-align: left;
+      max-width: 500px;
+      margin: 0 auto 32px;
+    }
+
+    .disclosure-list li {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+      padding-left: 28px;
+      position: relative;
+    }
+
+    .disclosure-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .disclosure-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-dark);
+      font-size: 18px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .disclosure-email:hover {
+      color: var(--accent);
+    }
+
+    /* Contact Security Section */
+    .contact-container {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-card {
+      background: rgba(0, 212, 170, 0.1);
+      border-radius: 16px;
+      padding: 48px;
+      margin-top: 40px;
+    }
+
+    .contact-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .contact-icon svg {
+      color: var(--primary);
+    }
+
+    .contact-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .contact-desc {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .contact-email-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      font-size: 18px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 16px 32px;
+      background: var(--accent);
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+
+    .contact-email-link:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+    }
+
+    /* Footer */
+    .footer {
+      background: #0D1017;
+      padding: 80px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-brand {
+      max-width: 300px;
+    }
+
+    .footer-brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .footer-brand-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .footer-brand-desc {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 80px;
+      flex-wrap: wrap;
+    }
+
+    .footer-column h4 {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-column a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .footer-copyright {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 14px;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-legal a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover {
+      color: white;
+    }
+
+    /* Icons */
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .icon-small {
+      width: 18px;
+      height: 18px;
+    }
+
+    .icon-large {
+      width: 28px;
+      height: 28px;
+    }
+
+    .icon-xl {
+      width: 40px;
+      height: 40px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .nav, .hero, .section, .footer {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .hero-title {
+        font-size: 40px;
+      }
+
+      .section-title {
+        font-size: 36px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        gap: 20px;
+        padding: 16px 24px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .hero {
+        padding: 140px 24px 60px;
+      }
+
+      .hero-title {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .hero-subtitle {
+        font-size: 17px;
+      }
+
+      .hero-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+      }
+
+      .hero-icon svg {
+        width: 32px;
+        height: 32px;
+      }
+
+      .section {
+        padding: 60px 24px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .practice-item {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .disclosure-box {
+        padding: 32px 24px;
+      }
+
+      .contact-card {
+        padding: 32px 24px;
+      }
+
+      .footer {
+        padding: 60px 24px;
+      }
+
+      .footer-content {
+        flex-direction: column;
+      }
+
+      .footer-links {
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav fade-in-up fade-in-up-delay-1">
+    <a href="index.html" class="nav-brand">
+      <img src="real-logo.png" alt="ReputeHQ" class="nav-logo">
+      <span class="nav-title">ReputeHQ</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="help-center.html" class="nav-link">Help Center</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+      <a href="login.html" class="btn btn-ghost">Login</a>
+      <a href="signup.html" class="btn btn-primary">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg-shape"></div>
+    <div class="hero-bg-shape-2"></div>
+
+    <div class="hero-content">
+      <div class="hero-icon fade-in-up fade-in-up-delay-2">
+        <svg class="icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+
+      <h1 class="hero-title fade-in-up fade-in-up-delay-3">
+        Your Data Security Is Our <span class="highlight">Top Priority</span>
+      </h1>
+
+      <p class="hero-subtitle fade-in-up fade-in-up-delay-4">
+        At ReputeHQ, we implement industry-leading security measures to protect your business data and customer information. Trust is the foundation of everything we do.
+      </p>
+    </div>
+  </section>
+
+  <!-- Security Features Section -->
+  <section class="section section-light">
+    <div class="section-header">
+      <div class="section-label">Security Features</div>
+      <h2 class="section-title">Enterprise-Grade Protection</h2>
+      <p class="section-subtitle">We employ multiple layers of security to ensure your data remains safe and compliant with global standards.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card fade-in-up fade-in-up-delay-1">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Data Encryption (AES-256)</h3>
+        <p class="feature-desc">All data is encrypted at rest and in transit using AES-256 encryption, the same standard used by banks and government agencies worldwide.</p>
+      </div>
+
+      <div class="feature-card fade-in-up fade-in-up-delay-2">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 12l2 2 4-4"/>
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">SOC 2 Compliance</h3>
+        <p class="feature-desc">We maintain SOC 2 Type II compliance, demonstrating our commitment to security, availability, processing integrity, confidentiality, and privacy.</p>
+      </div>
+
+      <div class="feature-card fade-in-up fade-in-up-delay-3">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">GDPR Compliant</h3>
+        <p class="feature-desc">Our platform is fully compliant with GDPR regulations, giving European users complete control over their personal data and privacy rights.</p>
+      </div>
+
+      <div class="feature-card fade-in-up fade-in-up-delay-4">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <circle cx="12" cy="16" r="1"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Two-Factor Authentication</h3>
+        <p class="feature-desc">Protect your account with two-factor authentication (2FA) using authenticator apps or SMS verification for an extra layer of security.</p>
+      </div>
+
+      <div class="feature-card fade-in-up fade-in-up-delay-5">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Regular Audits</h3>
+        <p class="feature-desc">We conduct regular third-party security audits and penetration testing to identify and address potential vulnerabilities proactively.</p>
+      </div>
+
+      <div class="feature-card fade-in-up fade-in-up-delay-6">
+        <div class="feature-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Secure Infrastructure</h3>
+        <p class="feature-desc">Our infrastructure is hosted on AWS with automatic failover, DDoS protection, and 99.99% uptime SLA to ensure continuous availability.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Practices Section -->
+  <section class="section section-gray">
+    <div class="section-header">
+      <div class="section-label">Our Commitment</div>
+      <h2 class="section-title">Security Best Practices</h2>
+      <p class="section-subtitle">We follow industry best practices and continuously improve our security posture.</p>
+    </div>
+
+    <div class="practices-container">
+      <div class="practice-item">
+        <div class="practice-number">1</div>
+        <div class="practice-content">
+          <h3 class="practice-title">Secure Development Lifecycle</h3>
+          <p class="practice-desc">Our engineering team follows secure coding practices, including code reviews, static analysis, and vulnerability scanning at every stage of development. All changes go through rigorous testing before deployment.</p>
+        </div>
+      </div>
+
+      <div class="practice-item">
+        <div class="practice-number">2</div>
+        <div class="practice-content">
+          <h3 class="practice-title">Access Control and Monitoring</h3>
+          <p class="practice-desc">We implement the principle of least privilege for all system access. All access is logged, monitored, and regularly reviewed. Suspicious activities trigger immediate alerts and investigation.</p>
+        </div>
+      </div>
+
+      <div class="practice-item">
+        <div class="practice-number">3</div>
+        <div class="practice-content">
+          <h3 class="practice-title">Data Backup and Recovery</h3>
+          <p class="practice-desc">Your data is automatically backed up with point-in-time recovery capabilities. Backups are encrypted and stored in geographically distributed locations to ensure business continuity.</p>
+        </div>
+      </div>
+
+      <div class="practice-item">
+        <div class="practice-number">4</div>
+        <div class="practice-content">
+          <h3 class="practice-title">Employee Security Training</h3>
+          <p class="practice-desc">All employees undergo comprehensive security awareness training and background checks. Access to customer data is strictly limited and monitored.</p>
+        </div>
+      </div>
+
+      <div class="practice-item">
+        <div class="practice-number">5</div>
+        <div class="practice-content">
+          <h3 class="practice-title">Incident Response Plan</h3>
+          <p class="practice-desc">We maintain a comprehensive incident response plan with defined procedures for detection, containment, and recovery. Our team is trained to respond quickly to any security event.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Responsible Disclosure Section -->
+  <section class="section section-light">
+    <div class="disclosure-container">
+      <div class="section-header">
+        <div class="section-label">Security Researchers</div>
+        <h2 class="section-title">Responsible Disclosure</h2>
+        <p class="section-subtitle">We value the security research community and welcome responsible disclosure of potential vulnerabilities.</p>
+      </div>
+
+      <div class="disclosure-box">
+        <p class="disclosure-text">If you believe you have discovered a security vulnerability in ReputeHQ, we encourage you to report it responsibly. We are committed to working with security researchers to verify and address any potential issues.</p>
+
+        <ul class="disclosure-list">
+          <li>Please provide detailed information about the vulnerability, including steps to reproduce</li>
+          <li>Give us reasonable time to investigate and address the issue before public disclosure</li>
+          <li>Avoid accessing or modifying user data without permission</li>
+          <li>Do not perform actions that could harm our users or services</li>
+          <li>Act in good faith and comply with all applicable laws</li>
+        </ul>
+
+        <p class="disclosure-text">We appreciate your help in keeping ReputeHQ and our users safe. Qualified reports may be eligible for our bug bounty program.</p>
+
+        <a href="mailto:security@reputehq.com" class="disclosure-email">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          security@reputehq.com
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Security Team Section -->
+  <section class="section section-gray">
+    <div class="contact-container">
+      <div class="section-header">
+        <div class="section-label">Get In Touch</div>
+        <h2 class="section-title">Contact Our Security Team</h2>
+        <p class="section-subtitle">Have questions about our security practices or need to report a concern? Our security team is here to help.</p>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </div>
+        <h3 class="contact-title">Security Team</h3>
+        <p class="contact-desc">For security-related inquiries, vulnerability reports, or compliance questions, reach out to our dedicated security team.</p>
+        <a href="mailto:security@reputehq.com" class="contact-email-link">
+          <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Email Security Team
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-brand-header">
+          <img src="real-logo.png" alt="ReputeHQ" class="footer-logo">
+          <span class="footer-brand-name">ReputeHQ</span>
+        </div>
+        <p class="footer-brand-desc">Empowering businesses to build stronger customer relationships through intelligent review management.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Product</h4>
+          <a href="index.html#features">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">Integrations</a>
+          <a href="#">API</a>
+        </div>
+        <div class="footer-column">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <a href="help-center.html">Help Center</a>
+          <a href="contact.html">Contact</a>
+          <a href="status.html">Status</a>
+          <a href="security.html">Security</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 ReputeHQ. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="service.html">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

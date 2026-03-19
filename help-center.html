@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center - ReputeHQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FFFFFF;
+      color: #1A1F36;
+      overflow-x: hidden;
+    }
+
+    :root {
+      --primary: #1A1F36;
+      --accent: #00D4AA;
+      --accent-dark: #00B894;
+      --text-primary: #1A1F36;
+      --text-secondary: #6B7280;
+      --text-muted: #9CA3AF;
+      --bg-white: #FFFFFF;
+      --bg-light: #F7F8FA;
+      --bg-dark: #1A1F36;
+      --border-light: #E5E7EB;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .fade-in-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .fade-in-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .fade-in-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .fade-in-up-delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 80px;
+      background: var(--bg-white);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .nav-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .nav-link.active {
+      color: var(--primary);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--primary);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-light);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+    }
+
+    .btn-dark {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-dark:hover {
+      background: #2D3555;
+      transform: translateY(-2px);
+    }
+
+    .btn-large {
+      padding: 16px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 160px 80px 100px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F7F8FA 100%);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-shape {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.08) 0%, rgba(0, 212, 170, 0.02) 100%);
+      right: -200px;
+      top: -200px;
+      pointer-events: none;
+    }
+
+    .hero-bg-shape-2 {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(26, 31, 54, 0.05) 0%, rgba(26, 31, 54, 0.01) 100%);
+      left: -150px;
+      bottom: -150px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      font-size: 52px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-size: 20px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    /* Search Bar */
+    .search-container {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 18px 24px 18px 56px;
+      font-size: 16px;
+      border: 2px solid var(--border-light);
+      border-radius: 12px;
+      background: var(--bg-white);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.1);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    /* Category Section */
+    .categories {
+      padding: 80px;
+      background: var(--bg-white);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 18px;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .category-card {
+      background: var(--bg-light);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+    }
+
+    .category-card:hover {
+      background: var(--bg-white);
+      border-color: var(--border-light);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+    }
+
+    .category-card.hidden {
+      display: none;
+    }
+
+    .category-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .category-icon svg {
+      color: var(--primary);
+    }
+
+    .category-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .category-desc {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* Popular Articles Section */
+    .articles {
+      padding: 80px;
+      background: var(--bg-light);
+    }
+
+    .articles-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      background: var(--bg-white);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all 0.3s;
+    }
+
+    .faq-item:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .faq-item.hidden {
+      display: none;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 24px;
+      background: none;
+      border: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .faq-question-text {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--primary);
+      padding-right: 16px;
+    }
+
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--text-muted);
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+      color: var(--accent);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+    }
+
+    .faq-answer-content {
+      padding: 0 24px 24px;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .faq-answer-content a {
+      color: var(--accent-dark);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .faq-answer-content a:hover {
+      text-decoration: underline;
+    }
+
+    .faq-answer-content ul {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+
+    .faq-answer-content li {
+      margin-bottom: 8px;
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 100px 80px;
+      background: var(--bg-dark);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-bg-shape {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 212, 170, 0.15) 0%, transparent 70%);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cta-title {
+      font-size: 40px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+
+    .cta-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 18px;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      background: #0D1017;
+      padding: 80px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-brand {
+      max-width: 300px;
+    }
+
+    .footer-brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .footer-brand-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .footer-brand-desc {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 80px;
+      flex-wrap: wrap;
+    }
+
+    .footer-column h4 {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-column a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .footer-copyright {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 14px;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-legal a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover {
+      color: white;
+    }
+
+    /* Icons */
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .icon-large {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* No Results Message */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      display: none;
+    }
+
+    .no-results.visible {
+      display: block;
+    }
+
+    .no-results-icon {
+      width: 64px;
+      height: 64px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .no-results-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .no-results-text {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .mobile-menu-toggle svg {
+      width: 24px;
+      height: 24px;
+      color: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .nav, .hero, .categories, .articles, .cta, .footer {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .hero-title {
+        font-size: 42px;
+      }
+
+      .section-title {
+        font-size: 32px;
+      }
+
+      .footer-links {
+        gap: 40px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        gap: 20px;
+        padding: 16px 24px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .hero {
+        padding: 140px 24px 60px;
+      }
+
+      .hero-title {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .hero-subtitle {
+        font-size: 17px;
+      }
+
+      .categories, .articles {
+        padding: 60px 24px;
+      }
+
+      .categories-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta {
+        padding: 80px 24px;
+      }
+
+      .cta-title {
+        font-size: 28px;
+      }
+
+      .footer {
+        padding: 60px 24px;
+      }
+
+      .footer-content {
+        flex-direction: column;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+
+      .faq-question-text {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav fade-in-up fade-in-up-delay-1">
+    <a href="index.html" class="nav-brand">
+      <img src="real-logo.png" alt="ReputeHQ" class="nav-logo">
+      <span class="nav-title">ReputeHQ</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="help-center.html" class="nav-link active">Help Center</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+      <a href="login.html" class="btn btn-ghost">Login</a>
+      <a href="signup.html" class="btn btn-primary">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg-shape"></div>
+    <div class="hero-bg-shape-2"></div>
+
+    <div class="hero-content fade-in-up fade-in-up-delay-2">
+      <h1 class="hero-title">Help Center</h1>
+      <p class="hero-subtitle">Find answers to your questions, explore guides, and get the support you need to make the most of ReputeHQ.</p>
+
+      <div class="search-container">
+        <svg class="search-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21L16.65 16.65"/>
+        </svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search for help articles...">
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories" id="categories">
+    <div class="section-header fade-in-up fade-in-up-delay-3">
+      <h2 class="section-title">Browse by Category</h2>
+      <p class="section-subtitle">Select a topic to find the help you need</p>
+    </div>
+
+    <div class="categories-grid" id="categoriesGrid">
+      <a href="#articles" class="category-card" data-category="getting-started">
+        <div class="category-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+            <path d="M2 17L12 22L22 17"/>
+            <path d="M2 12L12 17L22 12"/>
+          </svg>
+        </div>
+        <h3 class="category-title">Getting Started</h3>
+        <p class="category-desc">Learn the basics of setting up your account and navigating the platform.</p>
+      </a>
+
+      <a href="#articles" class="category-card" data-category="account-billing">
+        <div class="category-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+            <line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+        </div>
+        <h3 class="category-title">Account & Billing</h3>
+        <p class="category-desc">Manage your subscription, payment methods, and account settings.</p>
+      </a>
+
+      <a href="#articles" class="category-card" data-category="reviews-management">
+        <div class="category-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3L14.5 8.5L21 9.5L16.5 14L17.5 21L12 18L6.5 21L7.5 14L3 9.5L9.5 8.5L12 3Z"/>
+          </svg>
+        </div>
+        <h3 class="category-title">Reviews Management</h3>
+        <p class="category-desc">Master the art of managing and responding to customer reviews.</p>
+      </a>
+
+      <a href="#articles" class="category-card" data-category="ai-responses">
+        <div class="category-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"/>
+          </svg>
+        </div>
+        <h3 class="category-title">AI Responses</h3>
+        <p class="category-desc">Understand how to use AI-powered response generation effectively.</p>
+      </a>
+
+      <a href="#articles" class="category-card" data-category="integrations">
+        <div class="category-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 16V12L21 7V17L16 12V16C16 17.1 15.1 18 14 18H4C2.9 18 2 17.1 2 16V8C2 6.9 2.9 6 4 6H14C15.1 6 16 6.9 16 8V12"/>
+          </svg>
+        </div>
+        <h3 class="category-title">Integrations</h3>
+        <p class="category-desc">Connect ReputeHQ with Google Business, Trustpilot, and more.</p>
+      </a>
+
+      <a href="#articles" class="category-card" data-category="security-privacy">
+        <div class="category-icon">
+          <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/>
+            <path d="M9 12L11 14L15 10"/>
+          </svg>
+        </div>
+        <h3 class="category-title">Security & Privacy</h3>
+        <p class="category-desc">Learn about our security measures and data protection practices.</p>
+      </a>
+    </div>
+
+    <div class="no-results" id="noCategoriesResults">
+      <svg class="no-results-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21L16.65 16.65"/>
+        <path d="M8 8L14 14M14 8L8 14"/>
+      </svg>
+      <h3 class="no-results-title">No categories found</h3>
+      <p class="no-results-text">Try adjusting your search terms</p>
+    </div>
+  </section>
+
+  <!-- Popular Articles Section -->
+  <section class="articles" id="articles">
+    <div class="articles-container">
+      <div class="section-header fade-in-up fade-in-up-delay-4">
+        <h2 class="section-title">Popular Articles</h2>
+        <p class="section-subtitle">Quick answers to frequently asked questions</p>
+      </div>
+
+      <div id="faqContainer">
+        <div class="faq-item" data-keywords="google business profile connect setup integration gbp">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-question-text">How to connect Google Business Profile</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-content">
+              <p>Connecting your Google Business Profile to ReputeHQ is simple and takes just a few minutes:</p>
+              <ul>
+                <li>Navigate to <strong>Settings > Integrations</strong> in your dashboard</li>
+                <li>Click on the <strong>Google Business Profile</strong> card</li>
+                <li>Click <strong>Connect Account</strong> and sign in with your Google account</li>
+                <li>Grant ReputeHQ permission to access your business reviews</li>
+                <li>Select the locations you want to sync</li>
+              </ul>
+              <p>Once connected, your reviews will automatically sync every 15 minutes. You can also trigger a manual sync anytime from the dashboard.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" data-keywords="ai artificial intelligence generated responses automatic reply">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Understanding AI-generated responses</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-content">
+              <p>ReputeHQ uses advanced AI to help you craft personalized responses to customer reviews:</p>
+              <ul>
+                <li><strong>Context-Aware:</strong> Our AI analyzes the review content, sentiment, and star rating to generate appropriate responses</li>
+                <li><strong>Brand Voice:</strong> Customize the AI's tone to match your brand personality (professional, friendly, casual)</li>
+                <li><strong>Editable:</strong> All AI-generated responses are drafts that you can review and edit before posting</li>
+                <li><strong>Learning:</strong> The AI learns from your edits to improve future suggestions</li>
+              </ul>
+              <p>To use AI responses, click on any review and select <strong>Generate AI Response</strong>. You can regenerate with different tones or edit the response directly.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" data-keywords="multiple locations branches stores franchises manage">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Managing multiple locations</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-content">
+              <p>ReputeHQ makes it easy to manage reviews across all your business locations:</p>
+              <ul>
+                <li><strong>Location Dashboard:</strong> View all locations at a glance with key metrics for each</li>
+                <li><strong>Filtering:</strong> Filter reviews by specific locations or view them all together</li>
+                <li><strong>Team Access:</strong> Assign team members to specific locations with role-based permissions</li>
+                <li><strong>Bulk Actions:</strong> Apply response templates or actions across multiple locations</li>
+              </ul>
+              <p>To add a new location, go to <strong>Settings > Locations > Add Location</strong> and connect the relevant review platforms for that location.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" data-keywords="notifications alerts email push settings configure">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Setting up notifications</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-content">
+              <p>Stay on top of new reviews with customizable notifications:</p>
+              <ul>
+                <li><strong>Email Alerts:</strong> Receive instant or daily digest emails for new reviews</li>
+                <li><strong>Push Notifications:</strong> Enable browser notifications for real-time alerts</li>
+                <li><strong>Slack Integration:</strong> Get review notifications in your team's Slack channel</li>
+                <li><strong>Priority Alerts:</strong> Set up special alerts for negative reviews (3 stars or below)</li>
+              </ul>
+              <p>Configure your notification preferences in <strong>Settings > Notifications</strong>. You can set different preferences for each location and review platform.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" data-keywords="billing subscription payment plan pricing upgrade downgrade cancel">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Billing and subscription FAQ</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-content">
+              <p>Common questions about billing and subscriptions:</p>
+              <ul>
+                <li><strong>Free Trial:</strong> All new accounts start with a 14-day free trial with full feature access</li>
+                <li><strong>Payment Methods:</strong> We accept all major credit cards and PayPal</li>
+                <li><strong>Billing Cycle:</strong> Choose monthly or annual billing (save 20% with annual)</li>
+                <li><strong>Upgrading:</strong> Upgrade anytime and only pay the prorated difference</li>
+                <li><strong>Downgrading:</strong> Changes take effect at the end of your current billing period</li>
+                <li><strong>Cancellation:</strong> Cancel anytime from Settings > Billing. No cancellation fees</li>
+              </ul>
+              <p>View your billing history and manage your subscription in <strong>Settings > Billing</strong>. For billing questions, <a href="contact.html">contact our support team</a>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-results" id="noArticlesResults">
+        <svg class="no-results-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21L16.65 16.65"/>
+          <path d="M8 8L14 14M14 8L8 14"/>
+        </svg>
+        <h3 class="no-results-title">No articles found</h3>
+        <p class="no-results-text">Try different search terms or browse categories above</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="cta-bg-shape"></div>
+    <div class="cta-content">
+      <h2 class="cta-title">Still Need Help?</h2>
+      <p class="cta-subtitle">Our support team is ready to assist you with any questions or concerns you may have.</p>
+      <a href="contact.html" class="btn btn-primary btn-large">
+        Contact Support
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12H19M19 12L12 5M19 12L12 19"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-brand-header">
+          <img src="real-logo.png" alt="ReputeHQ" class="footer-logo">
+          <span class="footer-brand-name">ReputeHQ</span>
+        </div>
+        <p class="footer-brand-desc">Empowering businesses to build stronger customer relationships through intelligent review management.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Product</h4>
+          <a href="index.html#features">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">Integrations</a>
+          <a href="#">API</a>
+        </div>
+        <div class="footer-column">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <a href="help-center.html">Help Center</a>
+          <a href="contact.html">Contact</a>
+          <a href="status.html">Status</a>
+          <a href="security.html">Security</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 ReputeHQ. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="service.html">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // FAQ Accordion functionality
+    function toggleFaq(button) {
+      const faqItem = button.closest('.faq-item');
+      const isActive = faqItem.classList.contains('active');
+
+      // Close all other FAQ items
+      document.querySelectorAll('.faq-item.active').forEach(item => {
+        if (item !== faqItem) {
+          item.classList.remove('active');
+        }
+      });
+
+      // Toggle current item
+      faqItem.classList.toggle('active', !isActive);
+    }
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const categoriesGrid = document.getElementById('categoriesGrid');
+    const faqContainer = document.getElementById('faqContainer');
+    const noCategoriesResults = document.getElementById('noCategoriesResults');
+    const noArticlesResults = document.getElementById('noArticlesResults');
+
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase().trim();
+
+      // Filter categories
+      const categoryCards = categoriesGrid.querySelectorAll('.category-card');
+      let visibleCategories = 0;
+
+      categoryCards.forEach(card => {
+        const title = card.querySelector('.category-title').textContent.toLowerCase();
+        const desc = card.querySelector('.category-desc').textContent.toLowerCase();
+        const category = card.dataset.category.toLowerCase().replace(/-/g, ' ');
+
+        const matches = searchTerm === '' ||
+          title.includes(searchTerm) ||
+          desc.includes(searchTerm) ||
+          category.includes(searchTerm);
+
+        card.classList.toggle('hidden', !matches);
+        if (matches) visibleCategories++;
+      });
+
+      noCategoriesResults.classList.toggle('visible', visibleCategories === 0 && searchTerm !== '');
+
+      // Filter FAQ items
+      const faqItems = faqContainer.querySelectorAll('.faq-item');
+      let visibleArticles = 0;
+
+      faqItems.forEach(item => {
+        const questionText = item.querySelector('.faq-question-text').textContent.toLowerCase();
+        const answerContent = item.querySelector('.faq-answer-content').textContent.toLowerCase();
+        const keywords = item.dataset.keywords.toLowerCase();
+
+        const matches = searchTerm === '' ||
+          questionText.includes(searchTerm) ||
+          answerContent.includes(searchTerm) ||
+          keywords.includes(searchTerm);
+
+        item.classList.toggle('hidden', !matches);
+        if (matches) visibleArticles++;
+
+        // Auto-expand matching items when searching
+        if (matches && searchTerm !== '') {
+          item.classList.add('active');
+        } else if (searchTerm === '') {
+          item.classList.remove('active');
+        }
+      });
+
+      noArticlesResults.classList.toggle('visible', visibleArticles === 0 && searchTerm !== '');
+    });
+
+    // Smooth scroll for category links
+    document.querySelectorAll('.category-card').forEach(card => {
+      card.addEventListener('click', function(e) {
+        e.preventDefault();
+        const articlesSection = document.getElementById('articles');
+        articlesSection.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

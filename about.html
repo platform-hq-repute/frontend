@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - ReputeHQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FFFFFF;
+      color: #1A1F36;
+      overflow-x: hidden;
+    }
+
+    :root {
+      --primary: #1A1F36;
+      --accent: #00D4AA;
+      --accent-dark: #00B894;
+      --text-primary: #1A1F36;
+      --text-secondary: #6B7280;
+      --text-muted: #9CA3AF;
+      --bg-white: #FFFFFF;
+      --bg-light: #F7F8FA;
+      --bg-dark: #1A1F36;
+      --border-light: #E5E7EB;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .fade-in-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .fade-in-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .fade-in-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .fade-in-up-delay-4 { animation-delay: 0.4s; opacity: 0; }
+    .fade-in-up-delay-5 { animation-delay: 0.5s; opacity: 0; }
+    .fade-in-up-delay-6 { animation-delay: 0.6s; opacity: 0; }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 80px;
+      background: var(--bg-white);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .nav-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .nav-link.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--primary);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-light);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+    }
+
+    .btn-dark {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-dark:hover {
+      background: #2D3555;
+      transform: translateY(-2px);
+    }
+
+    .btn-large {
+      padding: 16px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 140px 80px 100px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F7F8FA 100%);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .hero-bg-shape {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.08) 0%, rgba(0, 212, 170, 0.02) 100%);
+      right: -200px;
+      top: -200px;
+      pointer-events: none;
+    }
+
+    .hero-bg-shape-2 {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(26, 31, 54, 0.05) 0%, rgba(26, 31, 54, 0.01) 100%);
+      left: -150px;
+      bottom: -150px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 212, 170, 0.1);
+      padding: 8px 16px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .badge-text {
+      color: var(--accent-dark);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .hero-title {
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .hero-title .highlight {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-size: 20px;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Section Styles */
+    .section {
+      padding: 100px 80px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-label {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 44px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    /* Our Story Section */
+    .story-section {
+      background: var(--bg-white);
+    }
+
+    .story-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .story-text h3 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+
+    .story-text p {
+      color: var(--text-secondary);
+      font-size: 17px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .story-visual {
+      position: relative;
+    }
+
+    .story-card {
+      background: var(--bg-light);
+      border-radius: 20px;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-card::before {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.2) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -50px;
+      right: -50px;
+    }
+
+    .story-stat {
+      position: relative;
+      z-index: 1;
+    }
+
+    .story-stat-value {
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .story-stat-label {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    .story-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .story-stat-item {
+      text-align: center;
+    }
+
+    .story-stat-item .value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .story-stat-item .label {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Values Section */
+    .values-section {
+      background: var(--bg-light);
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .value-card {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .value-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent);
+    }
+
+    .value-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .value-card:hover .value-icon {
+      transform: scale(1.1);
+    }
+
+    .value-icon svg {
+      color: var(--primary);
+      width: 32px;
+      height: 32px;
+    }
+
+    .value-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .value-desc {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* Team Section */
+    .team-section {
+      background: var(--bg-white);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .team-card {
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .team-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .team-avatar {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--bg-light) 0%, var(--border-light) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-avatar::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: var(--bg-light);
+    }
+
+    .team-avatar-placeholder {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .team-avatar-placeholder svg {
+      width: 64px;
+      height: 64px;
+    }
+
+    .team-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .team-role {
+      font-size: 15px;
+      color: var(--accent-dark);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .team-bio {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 120px 80px;
+      background: var(--bg-dark);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-bg-shape {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 212, 170, 0.15) 0%, transparent 70%);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cta-title {
+      font-size: 44px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .cta-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 18px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      background: #0D1017;
+      padding: 80px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-brand {
+      max-width: 300px;
+    }
+
+    .footer-brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .footer-brand-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .footer-brand-desc {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 80px;
+      flex-wrap: wrap;
+    }
+
+    .footer-column h4 {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-column a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .footer-copyright {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 14px;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-legal a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover {
+      color: white;
+    }
+
+    /* Icons */
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .icon-small {
+      width: 18px;
+      height: 18px;
+    }
+
+    .icon-large {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* Scroll Animation */
+    .scroll-animate {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    .scroll-animate.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .nav, .hero, .section, .cta, .footer {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .hero-title {
+        font-size: 44px;
+      }
+
+      .section-title {
+        font-size: 36px;
+      }
+
+      .story-content {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .footer-links {
+        gap: 40px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        gap: 20px;
+        padding: 16px 24px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .hero {
+        padding: 120px 24px 80px;
+        min-height: auto;
+      }
+
+      .hero-title {
+        font-size: 36px;
+        letter-spacing: -1px;
+      }
+
+      .hero-subtitle {
+        font-size: 17px;
+      }
+
+      .section {
+        padding: 60px 24px;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
+
+      .story-stat-value {
+        font-size: 48px;
+      }
+
+      .values-grid, .team-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta {
+        padding: 80px 24px;
+      }
+
+      .cta-title {
+        font-size: 28px;
+      }
+
+      .footer {
+        padding: 60px 24px;
+      }
+
+      .footer-content {
+        flex-direction: column;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav fade-in-up fade-in-up-delay-1">
+    <a href="index.html" class="nav-brand">
+      <img src="real-logo.png" alt="ReputeHQ" class="nav-logo">
+      <span class="nav-title">ReputeHQ</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link active">About</a>
+      <a href="help-center.html" class="nav-link">Help Center</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+      <a href="login.html" class="btn btn-ghost">Login</a>
+      <a href="signup.html" class="btn btn-primary">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg-shape"></div>
+    <div class="hero-bg-shape-2"></div>
+
+    <div class="hero-content">
+      <div class="badge fade-in-up fade-in-up-delay-2">
+        <span class="badge-dot"></span>
+        <span class="badge-text">About ReputeHQ</span>
+      </div>
+
+      <h1 class="hero-title fade-in-up fade-in-up-delay-3">
+        Transform Customer Reviews Into <span class="highlight">Business Growth</span>
+      </h1>
+
+      <p class="hero-subtitle fade-in-up fade-in-up-delay-4">
+        We believe every business deserves to shine. Our mission is to empower companies of all sizes to build stronger customer relationships through intelligent reputation management.
+      </p>
+    </div>
+  </section>
+
+  <!-- Our Story Section -->
+  <section class="section story-section">
+    <div class="story-content">
+      <div class="story-text scroll-animate">
+        <div class="section-label">Our Story</div>
+        <h3>Building the Future of Reputation Management</h3>
+        <p>
+          ReputeHQ was founded with a simple yet powerful vision: to help businesses take control of their online reputation. In today's digital-first world, customer reviews can make or break a business. We saw countless companies struggling to keep up with feedback across multiple platforms, losing valuable opportunities to engage with their customers.
+        </p>
+        <p>
+          Our team of industry veterans and technology innovators came together to create a solution that not only centralizes review management but also leverages the power of AI to help businesses respond thoughtfully and efficiently to every piece of customer feedback.
+        </p>
+        <p>
+          Today, ReputeHQ serves thousands of businesses worldwide, from small local shops to enterprise corporations, helping them turn customer feedback into their greatest competitive advantage.
+        </p>
+      </div>
+      <div class="story-visual scroll-animate">
+        <div class="story-card">
+          <div class="story-stat">
+            <div class="story-stat-value">2019</div>
+            <div class="story-stat-label">Founded with a mission to transform reputation management</div>
+          </div>
+          <div class="story-stat-grid">
+            <div class="story-stat-item">
+              <div class="value">10K+</div>
+              <div class="label">Active Businesses</div>
+            </div>
+            <div class="story-stat-item">
+              <div class="value">50M+</div>
+              <div class="label">Reviews Managed</div>
+            </div>
+            <div class="story-stat-item">
+              <div class="value">120+</div>
+              <div class="label">Countries Served</div>
+            </div>
+            <div class="story-stat-item">
+              <div class="value">99.9%</div>
+              <div class="label">Uptime</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Values Section -->
+  <section class="section values-section">
+    <div class="section-header scroll-animate">
+      <div class="section-label">Our Values</div>
+      <h2 class="section-title">What Drives Us Forward</h2>
+      <p class="section-subtitle">These core principles guide everything we do, from product development to customer support.</p>
+    </div>
+
+    <div class="values-grid">
+      <div class="value-card scroll-animate">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <h3 class="value-title">Innovation</h3>
+        <p class="value-desc">We constantly push boundaries with cutting-edge AI and machine learning to deliver smarter, faster solutions that keep our customers ahead of the curve.</p>
+      </div>
+
+      <div class="value-card scroll-animate">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <h3 class="value-title">Customer Focus</h3>
+        <p class="value-desc">Our customers are at the heart of everything we build. We listen, learn, and evolve based on real feedback to deliver solutions that truly matter.</p>
+      </div>
+
+      <div class="value-card scroll-animate">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+        </div>
+        <h3 class="value-title">Transparency</h3>
+        <p class="value-desc">We believe in open, honest communication. From our pricing to our processes, we maintain complete transparency with our customers and partners.</p>
+      </div>
+
+      <div class="value-card scroll-animate">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <h3 class="value-title">Excellence</h3>
+        <p class="value-desc">We set the highest standards for ourselves and our products. Every feature, every interaction, and every support ticket receives our best effort.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="section team-section">
+    <div class="section-header scroll-animate">
+      <div class="section-label">Our Team</div>
+      <h2 class="section-title">Meet the People Behind ReputeHQ</h2>
+      <p class="section-subtitle">A passionate team of innovators, designers, and customer champions dedicated to your success.</p>
+    </div>
+
+    <div class="team-grid">
+      <div class="team-card scroll-animate">
+        <div class="team-avatar">
+          <div class="team-avatar-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+        </div>
+        <h4 class="team-name">Alex Thompson</h4>
+        <p class="team-role">Chief Executive Officer</p>
+        <p class="team-bio">Former VP at a leading SaaS company with 15+ years of experience in customer experience technology.</p>
+      </div>
+
+      <div class="team-card scroll-animate">
+        <div class="team-avatar">
+          <div class="team-avatar-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+        </div>
+        <h4 class="team-name">Sarah Chen</h4>
+        <p class="team-role">Chief Technology Officer</p>
+        <p class="team-bio">AI researcher and engineer who previously led machine learning teams at top tech companies.</p>
+      </div>
+
+      <div class="team-card scroll-animate">
+        <div class="team-avatar">
+          <div class="team-avatar-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+        </div>
+        <h4 class="team-name">Michael Rodriguez</h4>
+        <p class="team-role">Chief Product Officer</p>
+        <p class="team-bio">Product visionary with a track record of building user-centric solutions that drive business growth.</p>
+      </div>
+
+      <div class="team-card scroll-animate">
+        <div class="team-avatar">
+          <div class="team-avatar-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+        </div>
+        <h4 class="team-name">Emily Watson</h4>
+        <p class="team-role">Head of Customer Success</p>
+        <p class="team-bio">Customer experience expert passionate about helping businesses achieve their reputation goals.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="cta-bg-shape"></div>
+    <div class="cta-content scroll-animate">
+      <h2 class="cta-title">Ready to Transform Your Reputation?</h2>
+      <p class="cta-subtitle">Join thousands of businesses using ReputeHQ to turn customer feedback into competitive advantage.</p>
+      <a href="signup.html" class="btn btn-primary btn-large">
+        Get Started Free
+        <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12H19M19 12L12 5M19 12L12 19"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-brand-header">
+          <img src="real-logo.png" alt="ReputeHQ" class="footer-logo">
+          <span class="footer-brand-name">ReputeHQ</span>
+        </div>
+        <p class="footer-brand-desc">Empowering businesses to build stronger customer relationships through intelligent review management.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Product</h4>
+          <a href="index.html#features">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">Integrations</a>
+          <a href="#">API</a>
+        </div>
+        <div class="footer-column">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <a href="help-center.html">Help Center</a>
+          <a href="contact.html">Contact</a>
+          <a href="status.html">Status</a>
+          <a href="security.html">Security</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copyright">2025 ReputeHQ. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="service.html">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Animation Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.scroll-animate').forEach(function(element) {
+        observer.observe(element);
+      });
+    });
+  </script>
+</body>
+</html>
